@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <title>Patient Management</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+ </head>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Patient Management</a>
+    </div>
+    <div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#section1">Weekly Analytics</a></li>
+          <li><a href="#section2">Patients</a></li>
+          <li><a href="#section3">Review</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="jumbotron">
+  <h1>Welcome to Patient Management</h1>      
+</div>
+
+<div id="section1" class="container-fluid">
+  <h1>Weekly Analytics</h1>
+  <p>This weeks numbers:</p>
+  <div id="fluid" class="container-fluid">
+    <div class="col-sm-3">
+      <div class="well">
+        <h4>Patients to Review</h4>
+        <p> $$$NUMBER HERE$$$ </p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="well">
+        <h4>High Priority Patients</h4>
+        <p> $$$NUMBER HERE$$$ </p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="well">
+        <h4>Patients per Doctor</h4>
+        <p> $$$NUMBER HERE$$$ </p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="well">
+        <h4>Plan Types</h4>
+        <p> $$$NUMBER HERE$$$ </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="section2" class="container-fluid">
+  <h1>Patients</h1>
+  <p>Patient List</p>
+  <div ng-app="myApp" ng-controller="pets">
+    <table id="patients" border="1" width="100%">
+      <tr>
+        <th>Name</th>
+        <th>Owner</th>
+      </tr>
+      <tr ng-repeat="x in names">
+        <td>{{ x.name }}</td>
+        <td>{{ x.owner }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div id="section3" class="container-fluid">
+  <h1>Review</h1>
+  <p>Time to review</p>
+</div>
+ 
+<script>
+var app = angular.module('myApp', []);
+app.controller('pets', function($scope, $http) {
+  $http.get("http://localhost/PMR/php/getPatientData.php").then(function (response) {
+    console.log(response)
+    $scope.names = response.data.things;
+  });
+});
+</script>
+
+<footer> MUHC</footer>
+
+</body>
+</html>
