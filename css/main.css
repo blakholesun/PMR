@@ -1,15 +1,43 @@
 body {
       position: relative; 
   }
-  #section1 {padding-top:50px;height:500px;color: #fff; background-color: #1E88E5;}
-  #section2 {padding-top:50px;height:500px;color: #fff; background-color: #673ab7;}
-  #section3 {padding-top:50px;height:500px;color: #fff; background-color: #ff9800;}
+  #section1 {
+  	padding-top:50px;
+  	height:auto;
+  	min-height: 500px;
+  	color: #fff; 
+  	background-color: #4ECDC4;
+  }
+  #section2 {
+  	padding-top:50px;
+  	min-height:500px;
+  	height:auto;
+  	color: #fff; 
+  	background-color: #556270;
+  }
+  #section3 {
+  	padding-top:50px;
+  	min-height:500px;
+  	height: auto;
+  	color: #fff; 
+  	background-color: #4ECDC4;}
 table, th , td  {
   border: 1px solid grey;
   border-collapse: collapse;
   padding: 5px;
 }
-	#patients {color: #000;}
+
+div.jumbotron {
+	color: #fff;
+	margin: 0;
+	text-align: center;
+	background-color: #556270;
+	padding-top: 100px;
+
+}
+
+#patients {color: #000;}
+
 table tr:nth-child(odd) {
   background-color: #f1f1f1;
 }
@@ -18,3 +46,17 @@ table tr:nth-child(even) {
 }
 
 #fluid {color: #000;}
+
+#footer {
+    background-color:#556270;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px; 
+}
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 100%;
+    margin: auto;
+ }
