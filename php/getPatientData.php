@@ -1,6 +1,5 @@
 <?php
-  include("config.php")
-  $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+  include('/var/www/PMR/config/config.php');
 
   $sql = 'SELECT name, owner FROM pet';
   $result = $mysqli->query($sql) or die($mysqli->error.__LINE__);
