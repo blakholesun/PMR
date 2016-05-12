@@ -8,14 +8,14 @@
     text-align      : center;
     background-color: #EEEEEE;
     padding-top     : 100px;
-    
+
   }
   
-  .scrollable-menu {
-    height          : auto;
+/*  .dropdown-menu {
     max-height      : 500px;
-    overflow-x      : hidden;
-  }
+    overflow: hidden;
+    overflow-y      : auto;
+  }*/
   
   #section1 {
     padding-top     :50px;
@@ -30,13 +30,7 @@
     height          :auto; 
     background-color: #EEEEEE;
   }
-  
-  #section3 {
-    padding-top     :50px;
-    min-height      :500px;
-    height          : auto;
-    background-color: #FFFFFF;
-  }
+
   table, th , td  {
     border          : 1px solid grey;
     border-collapse : collapse;
@@ -73,6 +67,6 @@
   
   .carousel-inner > .item > img,
   .carousel-inner > .item > a > img {
-    width           : 100%;
+    width           : auto;
     margin          : auto;
   }
