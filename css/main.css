@@ -1,62 +1,78 @@
-body {
-      position: relative; 
+  body {
+    position        : relative; 
+    color           : #515151;
   }
+  
+  div.jumbotron {
+    margin          : 0;
+    text-align      : center;
+    background-color: #EEEEEE;
+    padding-top     : 100px;
+    
+  }
+  
+  .scrollable-menu {
+    height          : auto;
+    max-height      : 500px;
+    overflow-x      : hidden;
+  }
+  
   #section1 {
-  	padding-top:50px;
-  	height:auto;
-  	min-height: 500px;
-  	color: #fff; 
-  	background-color: #4ECDC4;
+    padding-top     :50px;
+    height          :auto;
+    min-height      : 500px;
+    background-color: #FFFFFF;
   }
+  
   #section2 {
-  	padding-top:50px;
-  	min-height:500px;
-  	height:auto;
-  	color: #fff; 
-  	background-color: #556270;
+    padding-top     :50px;
+    min-height      :500px;
+    height          :auto; 
+    background-color: #EEEEEE;
   }
+  
   #section3 {
-  	padding-top:50px;
-  	min-height:500px;
-  	height: auto;
-  	color: #fff; 
-  	background-color: #4ECDC4;}
-table, th , td  {
-  border: 1px solid grey;
-  border-collapse: collapse;
-  padding: 5px;
-}
-
-div.jumbotron {
-	color: #fff;
-	margin: 0;
-	text-align: center;
-	background-color: #556270;
-	padding-top: 100px;
-
-}
-
-#patients {color: #000;}
-
-table tr:nth-child(odd) {
-  background-color: #f1f1f1;
-}
-table tr:nth-child(even) {
-  background-color: #ffffff;
-}
-
-#fluid {color: #000;}
-
-#footer {
-    background-color:#556270;
-    color:white;
-    clear:both;
-    text-align:center;
-    padding:5px; 
-}
-
-.carousel-inner > .item > img,
-.carousel-inner > .item > a > img {
-    width: 100%;
-    margin: auto;
- }
+    padding-top     :50px;
+    min-height      :500px;
+    height          : auto;
+    background-color: #FFFFFF;
+  }
+  table, th , td  {
+    border          : 1px solid grey;
+    border-collapse : collapse;
+    padding         : 5px;
+  }
+  
+  #patients {
+    color           : #000;
+  }
+  
+  table tr        :nth-child(odd) {
+    background-color: #f1f1f1;
+  }
+  table tr        :nth-child(even) {
+    background-color: #ffffff;
+  }
+  
+  #fluid {
+    color           : #000;
+  }
+  
+  div.well_analytics{
+    color           : #515151;
+    background-color: #00B4FF;
+  }
+  
+  #footer {
+    background-color:#515151;
+    color           :white;
+    clear           :both;
+    text-align      :center;
+    padding         :5px; 
+  }
+  
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+    width           : 100%;
+    margin          : auto;
+  }
