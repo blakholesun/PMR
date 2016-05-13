@@ -1,5 +1,5 @@
 <?php
-  include('../includes/config.php');
+  include('/usr/lib/cgi-bin/PMR/includes/config.php');
 
   $sql = 'SELECT name, owner FROM pet';
   $result = $mysqli->query($sql) or die($mysqli->error.__LINE__);
