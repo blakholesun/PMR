@@ -1,12 +1,18 @@
 <?php
-  include('/usr/lib/cgi-bin/PMR/includes/config.php');
+  include('/usr/lib/cgi-bin/dev/robert/includes/config.php');
+
+  $conn = mssql_connect(DB, UNAME, PWD);
+
+  if (!$conn){
+    die('Connection is broke yo.')
+  }
 
   $sql = 'SELECT name, owner FROM pet';
-  $result = $mysqli->query($sql) or die($mysqli->error.__LINE__);
+  $result = mssql_query($sql) or die('Query Failed.');
 
   $arr = array();
   if($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+    while($row = mssql_fetch_array($result)) {
       $arr[] = $row; 
     }
   }
@@ -16,4 +22,6 @@
  
   // # Return the response
   echo $json_response;
+
+  mssql_free_result($result)
 ?>
