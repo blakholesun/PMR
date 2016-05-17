@@ -1,20 +1,45 @@
 var app = angular.module('myApp', []);
 
 //Populated the table
-app.controller('pets', function($scope, $http) {
+app.controller('makeMenu', function($scope, $http) {
   $http.get("http://localhost/PMR/php/getPatientData_local.php").then(function (response) {
-    console.log(response);
-    $scope.names = response.data.things;
-  });
+    $scope.data = response.data.things;
+    
+    var doctors = [];
+    for (var x in $scope.data){
+      if ($scope.data[x].owner)
+      console.log($scope.data[x]);
+    }
+
+    /*function Doctor(doctorName, patientNames){
+      this.doctorName = doctorName;
+      this.patientNames = patientNames; */
+    })
+
 });
+
+// Custom filter to get unique values in a column
+/*app.filter("uniqueValues", function(){
+  return function(collection, keyname){
+    var output = [];
+    var keys = [];
+
+    angular.forEach(collection, function(item){
+      var key = item[keyname];
+      if(keys.indexOf(key)==-1){
+        keys.push(key);
+        output.push(item);
+      }
+    });
+    return output;
+  };
+});*/
 
 // Controller to toggle the view wrt collapsible button selection
 //TODO Make it modular!
 app.controller('infoCtrl', function($scope){
-	$scope.myTable = true;
-	$scope.myCarousel = false;
+	$scope.myCarousel = true;
   $scope.toggle = function() {
-   $scope.myTable = !$scope.myTable;
    $scope.myCarousel = !$scope.myCarousel;
  }
 });

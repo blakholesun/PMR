@@ -11,11 +11,11 @@
 
   }
   
-  /*  .dropdown-menu {
-    max-height      : 500px;
-    overflow: hidden;
-    overflow-y      : auto;
-  }*/
+  .scrollable-menu {
+    height      : auto;
+    max-height: 400px;
+    overflow-x      : hidden;
+  }
   
   #section1 {
     padding-top     :50px;
