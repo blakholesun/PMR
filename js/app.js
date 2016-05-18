@@ -1,39 +1,41 @@
 var app = angular.module('myApp', []);
 
-//Populated the table
-app.controller('makeMenu', function($scope, $http) {
+//Load the patient list
+app.controller('getPatientData', ['$http','$rootScope', '$scope', function($http,$rootScope){
   $http.get("http://localhost/PMR/php/getPatientData_local.php").then(function (response) {
-    $scope.data = response.data.things;
-    
-    var doctors = [];
-    for (var x in $scope.data){
-      if ($scope.data[x].owner)
-      console.log($scope.data[x]);
+    $rootScope.data = response.data.things;
+    /*console.log($rootScope.data);
+    for (var x in $rootScope.data){
+      console.log($rootScope.data[x]);
+    }*/
+  })
+}]);
+
+//Populate the navrbar menu by doctor=>patient
+app.controller('makeMenu', [ '$scope', function($scope) {
+    // Create a doctor class
+    function Doctor(dname, patients) {
+      this.dname = dname;
+      this.patients = [patients];
     }
 
-    /*function Doctor(doctorName, patientNames){
-      this.doctorName = doctorName;
-      this.patientNames = patientNames; */
-    })
-
-});
-
-// Custom filter to get unique values in a column
-/*app.filter("uniqueValues", function(){
-  return function(collection, keyname){
-    var output = [];
-    var keys = [];
-
-    angular.forEach(collection, function(item){
-      var key = item[keyname];
-      if(keys.indexOf(key)==-1){
-        keys.push(key);
-        output.push(item);
+    // Create an array of doctors that will contain the list of patients
+    var dataList = [];
+    for (var x in $scope.data){
+      //console.log($rootScope.data[x]);
+      if (dataList.indexOf(x.owner) = -1){
+        dataList.push(new Doctor(x.owner, x.name));
       }
-    });
-    return output;
-  };
-});*/
+      //console.log(dataList[0].dname);
+    }
+    $scope.dataList = dataList;
+    console.log($scope.data);
+}]);
+
+//Generate the analytics panel
+app.controller('makeAnalytics', function($scope){
+  
+});
 
 // Controller to toggle the view wrt collapsible button selection
 //TODO Make it modular!
@@ -44,14 +46,6 @@ app.controller('infoCtrl', function($scope){
  }
 });
 
-// Controller to get patient list and store in scope
-/*app.controller('patientListCtrl', function($scope, $http) {
-    $http.get("welcome.htm")
-    .then(function(response) {
-        $scope.PatientList = response.data;
-    });
-*/
-
 // Controller to request the ptient's data from the server
 /*app.controller('patientDataCtrl', function($scope, $http) {
     $http.get("welcome.htm")
@@ -59,16 +53,3 @@ app.controller('infoCtrl', function($scope){
         $scope.PatientToDisplay = response.data;
     });
 */
-
-// Make patient class to store data
-function patient(patient_id){
-  //Generic patient info, name, age, doctor, diagnosis
-  $scope.PatientToDisplay.info = function(){
-
-  };
-  // List of patient docs
-  $scope.PatientToDisplay.docs = function(){
-
-  };
-  
-}
