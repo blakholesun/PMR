@@ -1,40 +1,29 @@
 var app = angular.module('myApp', []);
 
-//Load the patient list
-app.controller('getPatientData', ['$http','$rootScope', '$scope', function($http,$rootScope){
+// Page controller
+app.controller('pageController', function($http,$scope,$timeout){
+  // Grab the list of patients and categorize by doctor
   $http.get("http://localhost/PMR/php/getPatientData_local.php").then(function (response) {
-    $rootScope.data = response.data.things;
-    /*console.log($rootScope.data);
-    for (var x in $rootScope.data){
-      console.log($rootScope.data[x]);
-    }*/
-  })
-}]);
+    $scope.data=response.data.things;
 
-//Populate the navrbar menu by doctor=>patient
-app.controller('makeMenu', [ '$scope', function($scope) {
-    // Create a doctor class
-    function Doctor(dname, patients) {
-      this.dname = dname;
-      this.patients = [patients];
-    }
-
-    // Create an array of doctors that will contain the list of patients
     var dataList = [];
-    for (var x in $scope.data){
-      //console.log($rootScope.data[x]);
-      if (dataList.indexOf(x.owner) = -1){
-        dataList.push(new Doctor(x.owner, x.name));
+    var index;
+    for (var i = 0; i < $scope.data.length; i++){
+      index = dataList.indexOf($scope.data[i].owner);
+      if (index === -1){
+        dataList.push($scope.data[i].owner);
       }
-      //console.log(dataList[0].dname);
+      index = dataList.indexOf($scope.data[i].owner);
+      console.log(dataList);
     }
-    $scope.dataList = dataList;
-    console.log($scope.data);
-}]);
+  });
 
-//Generate the analytics panel
-app.controller('makeAnalytics', function($scope){
-  
+  // Grab the data for each patient
+  $scope.grabPatient = function(){
+    $http.get("http://localhost/PMR/php/getPatientData_local.php").then(function (response) {
+      $scope.patient=reponse;
+    });
+  }
 });
 
 // Controller to toggle the view wrt collapsible button selection
@@ -45,11 +34,3 @@ app.controller('infoCtrl', function($scope){
    $scope.myCarousel = !$scope.myCarousel;
  }
 });
-
-// Controller to request the ptient's data from the server
-/*app.controller('patientDataCtrl', function($scope, $http) {
-    $http.get("welcome.htm")
-    .then(function(response) {
-        $scope.PatientToDisplay = response.data;
-    });
-*/
