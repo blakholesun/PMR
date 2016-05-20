@@ -30,8 +30,8 @@
               <li><a href="#section1">Weekly Analytics</a></li>
               <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Patient <span class="caret"></span></a>
                 <ul class="dropdown-menu scrollable-menu">
-                  <li class="dropdown-header" ng-repeat-start="x in data">{{x.owner}}</li>
-                  <li ng-repeat-end ="x in data" ng-repeat="x in data "><a href="#section2">ID {{x.name}}</a></li>
+                  <li class="dropdown-header" ng-repeat-start="x in dataList">{{x.name}}</li>
+                  <li ng-repeat-end ="x in dataList" ng-repeat="n in x.patients "><a href="#section2">ID {{n}}</a></li>
                 </ul>
               </li>
             </ul>
