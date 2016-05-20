@@ -22,7 +22,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>                        
           </button>
-          <a class="navbar-brand" href="#">Patient Management</a>
+          <a class="navbar-brand" href="#">Patient Maagement</a>
         </div>
         <div>
           <div class="collapse navbar-collapse" id="myNavbar">
@@ -30,8 +30,14 @@
               <li><a href="#section1">Weekly Analytics</a></li>
               <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Patient <span class="caret"></span></a>
                 <ul class="dropdown-menu scrollable-menu">
-                  <li class="dropdown-header" ng-repeat-start="x in dataList">{{x.name}}</li>
-                  <li ng-repeat-end ="x in dataList" ng-repeat="n in x.patients "><a href="#section2">ID {{n}}</a></li>
+                  <li class="dropdown-header" ng-repeat-start="x in dataList">
+                    Dr. {{x.firstName + " " + x.lastName}}
+                  </li>
+                  <li ng-repeat-end ="x in dataList" ng-repeat="n in x.patients ">
+                    <a href="#section2">
+                      {{n.lastName + ", " + n.firstName + " (" + n.ID +") "}}
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
