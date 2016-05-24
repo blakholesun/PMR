@@ -36,7 +36,8 @@ INNER JOIN Doctor doc ON doc.ResourceSer = pd.ResourceSer
 WHERE
 nsa.CreationDate >= DATEADD(day,-14,CONVERT(date,GETDATE()))
 AND
-nsa.NonScheduledActivityCode LIKE '%Open%'
+--nsa.NonScheduledActivityCode LIKE '%Open%'
+nsa.NonScheduledActivityCode LIKE '%Completed%'
 AND
 ac.ActivityCode LIKE '%PMR%'
 AND
@@ -74,5 +75,5 @@ echo json_encode(array('list'=>$arr));
 
 
 
-mssql_free_result($result);
+mssql_free_result($query);
 ?>

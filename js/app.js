@@ -26,17 +26,24 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
         for (var j = 0; j<$scope.data.length; j++){
           if (docs[docs.length-1] === $scope.data[j].DocLastName){
             dataList[dataList.length-1].patients.push(
-              new Patient(  ($scope.data[j].FirstName),
-                            ($scope.data[j].LastName),
-                            $scope.data[j].PatientID)
+              new Patient(  $scope.data[j].FirstName,
+                            $scope.data[j].LastName,
+                            $scope.data[j].PatientID
+                )
               );
           }
         }
       }
     }
     $scope.dataList = dataList;
-    $scope.activePatient = 0; // First patient for first doctor
-    console.log($scope.dataList);
+    $scope.activeDoctorIndex = 0; // set first doctor as default
+    $scope.activePatientIndex = 0; // Set first patient for first doctor
+    $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
+    //console.log($scope.dataList[$scope.activeDoctorIndex].lastName);
+    $http.post("php/getPatientPhoto.php", {patientID: $scope.patientID})
+    .then( function (response) {
+      $scope.patientPhoto = response.data;
+    });
   });
 
   // Grab the data for each patient
@@ -44,6 +51,53 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
     $http.get("http://localhost/PMR/php/getPatientDataAll.php").then(function (response) {
       $scope.patient=reponse;
     });
+  }
+
+  $scope.grabPatientPhoto = function() {
+    var data = {
+      patientID: $scope.patientID
+    };
+
+    $http.post( "php/getPatientPhoto.php", data).then( function (response) {
+      $scope.patientPhoto = response.data;
+    });
+  }
+
+  $scope.nextPatient = function(){
+    var isLastDoctorPatient = $scope.dataList[$scope.activeDoctorIndex].patients.length-1 === 
+    $scope.activePatientIndex;
+    var isLastDoctor = $scope.dataList.length-1 === $scope.activeDoctorIndex;
+
+    if (isLastDoctor && isLastDoctorPatient){
+      $scope.activeDoctorIndex = 0;
+      $scope.activePatientIndex = 0;
+    }
+    else if (isLastDoctorPatient){
+      $scope.activeDoctorIndex++;
+      $scope.activePatientIndex = 0;
+    } else {
+      $scope.activePatientIndex++;
+    }
+    $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
+  }
+
+  $scope.previousPatient = function(){
+    var isFirstDoctorPatient = $scope.activePatientIndex === 0;
+    var isFirstDoctor = $scope.activeDoctorIndex === 0;
+
+    if (isFirstDoctor && isFirstDoctorPatient){
+      $scope.activeDoctorIndex = $scope.dataList.length-1;
+      $scope.activePatientIndex = $scope.dataList[$scope.activeDoctorIndex]
+      .patients.length-1;
+    }
+    else if (isFirstDoctorPatient){
+      $scope.activeDoctorIndex--;
+      $scope.activePatientIndex = $scope.dataList[$scope.activeDoctorIndex]
+      .patients.length-1;
+    } else{
+      $scope.activePatientIndex--;
+    }
+    $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
   }
 });
 
