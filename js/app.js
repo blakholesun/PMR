@@ -33,7 +33,7 @@ app.controller('pageController', function($http,$scope,$timeout){
 
   // Grab the data for each patient
   $scope.grabPatient = function(){
-    $http.get("http://localhost/PMR/php/getPatientData_local.php").then(function (response) {
+    $http.get("http://localhost/PMR/php/getPatientDataAll.php").then(function (response) {
       $scope.patient=reponse;
     });
   }
