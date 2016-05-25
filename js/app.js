@@ -47,10 +47,19 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
   });
 
   // Grab the data for each patient
-  $scope.grabPatient = function(){
-    $http.get("http://localhost/PMR/php/getPatientDataAll.php").then(function (response) {
-      $scope.patient=reponse;
-    });
+  $scope.updateActivePatient = function(lookupID){
+    var storedID, found = false;
+    for (var i = 0; i < $scope.dataList.length && !found; i++){
+      for (var j =0; j < $scope.dataList[i].patients.length && !found; j++){
+        storedID = $scope.dataList[i].patients[j].ID;
+        if (lookupID === storedID){
+          found = true;
+          $scope.activeDoctorIndex = i;
+          $scope.activePatientIndex = j;
+          $scope.patientID = lookupID;
+        }
+      }
+    }
   }
 
   $scope.grabPatientPhoto = function() {

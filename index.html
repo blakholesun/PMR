@@ -34,7 +34,7 @@
                     Dr. {{x.firstName + " " + x.lastName}}
                   </li>
                   <li ng-repeat-end ="x in dataList" ng-repeat="n in x.patients ">
-                    <a href="">
+                    <a href="" ng-click="updateActivePatient(n.ID); grabPatientPhoto()">
                       {{n.lastName + ", " + n.firstName + " (" + n.ID +") "}}
                     </a>
                   </li>
@@ -114,6 +114,7 @@
             </div>
           </div>
         </div><br>
+        <input type="checkbox" checked data-toggle="toggle" data-on="Reviewed!" data-off="Not Reviewed" data-onstyle="success" data-offstyle="danger">
       </div>
       <br>
 
