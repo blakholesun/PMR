@@ -31,7 +31,8 @@
   #section2 {
     padding-top     :50px;
     min-height      :1000px;
-    height          :auto; 
+    max-height: 1500px;
+    height          :auto;
     background-color: #EEEEEE;
   }
 
@@ -78,4 +79,10 @@
   .carousel-inner > .item > a > img {
     width           : 100%;
     margin          : auto;
+  }
+
+  #collapse1{
+    height      : auto;
+    max-height: 400px;
+    overflow-x      : hidden;
   }

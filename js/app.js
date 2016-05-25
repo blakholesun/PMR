@@ -5,16 +5,21 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
   // Grab the list of patients and categorize by doctor
   $http.get("php/getPatientData.php").then(function (response) {
     $scope.data=response.data.list;
+
+    //Create a doctor class to store names and list of patients
     function Doctor(firstName, lastName){
       this.firstName = firstName;
       this.lastName = lastName;
       this.patients = [];
     }
+
+    //Create a patient class to store names and id
     function Patient(firstName, lastName, ID){
       this.firstName = firstName;
       this.lastName = lastName;
       this.ID = ID;
     }
+
     var dataList = []; // the list of doctor objects with patients
     var docs = []; // create an array to hold doctor names
     var index;
@@ -38,13 +43,22 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
     $scope.dataList = dataList;
     //$scope.patientCompletionCount = 0;
     $scope.activeDoctorIndex = 0; // set first doctor as default
-    $scope.activePatientIndex = 0; // Set first patient for first doctor
-    $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
-    //console.log($scope.dataList[$scope.activeDoctorIndex].lastName);
+    // Set first patient for first doctor
+    $scope.activePatientIndex = 0; 
+    $scope.patientID = $scope.dataList[0].patients[0].ID;
+
+    // First patient info
     $http.post("php/getPatientPhoto.php", {patientID: $scope.patientID})
     .then( function (response) {
       $scope.patientPhoto = response.data;
     });
+
+    // First Patient documenst
+    $http.post( "php/getPatientDocuments.php", {patientID: $scope.patientID})
+    .then( function (response) {
+      $scope.documents = response.data
+    });
+
   });
 
   // Grab the data for each patient
@@ -63,7 +77,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
     }
   }
 
-  $scope.grabPatientPhoto = function() {
+  $scope.grabPatientInfo = function() {
     var data = {
       patientID: $scope.patientID
     };
@@ -71,6 +85,12 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
     $http.post( "php/getPatientPhoto.php", data).then( function (response) {
       $scope.patientPhoto = response.data;
     });
+
+    $http.post( "php/getPatientDocuments.php", data).then( function (response) {
+      $scope.documents = response.data
+      //console.log($scope.documents);
+    });
+
   }
 
   $scope.nextPatient = function(){
@@ -108,6 +128,17 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
       $scope.activePatientIndex--;
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
+  }
+
+  $scope.displayDocument = function(filename){
+    var data = {
+      FileName: filename
+    };
+
+    $http.post( "php/downloadPDF.php", data).then( function (response) {
+      $scope.fileToDisplay = response.data;
+      //console.log($scope.documents);
+    });
   }
 
   /*$scope.patientCompletionIncrement = function() {
