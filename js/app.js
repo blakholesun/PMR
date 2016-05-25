@@ -36,6 +36,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
       }
     }
     $scope.dataList = dataList;
+    //$scope.patientCompletionCount = 0;
     $scope.activeDoctorIndex = 0; // set first doctor as default
     $scope.activePatientIndex = 0; // Set first patient for first doctor
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
@@ -108,6 +109,14 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
   }
+
+  /*$scope.patientCompletionIncrement = function() {
+    $scope.patientCompletionCount++;
+  }
+
+  $scope.patientCompletionDecrement = function() {
+    $scope.patientCompletionCount--;
+  }*/
 });
 
 // Controller to toggle the view wrt collapsible button selection
