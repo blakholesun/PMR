@@ -6,12 +6,11 @@
 
     $postdata = file_get_contents("php://input");
     $request = json_decode($postdata);
-    //$inputname = $request->filename;
-    $inputname = "719133.doc";
-    //$inputname = $_POST['filename'];
+    $inputname = $request->FileName;
+    
     // Get extension of input file (e.g doc or pdf), does not include period
     $inputext = pathinfo($inputname, PATHINFO_EXTENSION);
-    //echo $inputext;
+
     // Manually identify the path to the files which will be converted/served
     // Note that ext vs loc prefixes indicate use of URL or /var/www/
     // When calling exec() command in php, use the 'loc' prefix variables
@@ -29,56 +28,15 @@
         $loc_pdfpath = "/var/www/devDocuments/robert/pdftemp/";
 
         // convert the file
-        echo  $loc_pdfpath . ' ' . $loc_docpath . $inputname;
-        exec('/opt/libreoffice4.3/program/soffice.bin --writer --headless --convert-to pdf --nologo --outdir ' . $loc_pdfpath . ' ' . $loc_docpath . $inputname);
+        //echo  $loc_pdfpath . ' ' . $loc_docpath . $inputname;
+        exec('/opt/libreoffice4.3/program/soffice.bin --writer --headless --convert-to pdf --nologo --outdir ' . $loc_pdfpath . ' ' . $loc_docpath . $inputname, $one, $two);
         //send the filename back
-        //echo $json = $ext_pdfpath.$outputname;
-        
-        //echo str_replace('\\/', '/', json_encode($json));
-
-        // download the file
-        // header("Content-Disposition: attachment; filename=\"".basename($ext_pdfpath.$outputname)."\"");
-        // readfile($ext_pdfpath.$outputname);
-
-        // OR open the file in a new tab
-        //header("Content-type: application/pdf");
-        //header("Content-Disposition: inline; filename=\"".basename($ext_pdfpath.$outputname)."\"");
-        //readfile($ext_pdfpath.$outputname);
-
-        // remove the temporary PDF file after serving
-        //exec('rm ' . $loc_pdfpath . $outputname, $output, $return);
-
-        // if returning via json (ajax post), uncomment the following 3 lines:
-        // $json = array();
-        // $json = array('a'=>$output, 'b'=>$return);
-        // echo json_encode($json);
+        echo $json = $ext_pdfpath.$outputname;
     } 
     // if the file is a PDF file, just give it to the user (do not call LibreOffice):
     else {
-        // download the file
-        // header("Content-Disposition: attachment; filename=\"".basename($ext_docpath.$inputname)."\"");
-        // readfile($ext_docpath.$inputname);
-
-        // OR open the file in a new tab
-        /*header("Content-type: application/pdf");
-        header("Content-Disposition: inline; filename=\"".basename($ext_docpath.$inputname)."\"");
-        readfile($ext_docpath.$inputname);*/
-
-        $json = $ext_docpath.$inputname;
-        echo str_replace('\\/', '/', json_encode($json));
+        //Send filename back
+        echo $json = $ext_docpath.$inputname;
     }
 
-
-    // Simplest way to return pdf version of file (hardcoded paths & files)
-    // header("Access-Control-Allow-Origin: http://172.26.66.41:8006");
-
-    // $filepath = "http://172.26.66.41/devDocuments/logan/temp/test.pdf";
-
-    // exec('/opt/libreoffice4.3/program/soffice.bin --writer --headless --convert-to pdf --nologo --outdir /var/www/devDocuments/logan/temp/ /var/www/devDocuments/logan/mytest/test.docx', $output, $return);
-
-    // header("Content-Disposition: attachment; filename=\"".basename($filepath)."\"");
-
-    // readfile($filepath);
-
-    // // exec('rm /var/www/devDocuments/logan/mytest/test.pdf', $output, $return);
 ?>

@@ -1,7 +1,7 @@
 var app = angular.module('myApp', []);
 
 // Page controller
-app.controller('pageController', function($http,$scope,$timeout,$filter){
+app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
   // Grab the list of patients and categorize by doctor
   $http.get("php/getPatientData.php").then(function (response) {
     $scope.data=response.data.list;
@@ -135,9 +135,12 @@ app.controller('pageController', function($http,$scope,$timeout,$filter){
       FileName: filename
     };
 
+    var options = {
+      pdfOpenParams: { view: 'FitH', page: '1' }
+    };
+
     $http.post( "php/downloadPDF.php", data).then( function (response) {
-      $scope.fileToDisplay = response.data;
-      //console.log($scope.documents);
+      PDFObject.embed(response.data, "#Doc", options);
     });
   }
 
