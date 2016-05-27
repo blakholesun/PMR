@@ -22,21 +22,21 @@
     if ($inputext != "pdf"){
         // Output a file of same name, but with pdf extension
         $outputname = basename($inputname, ".".$inputext).".pdf";
-        
-        // Location where generated PDF will be stored temporarily until after served to user
-        $ext_pdfpath = "http://172.26.66.41/devDocuments/robert/pdftemp/";
         $loc_pdfpath = "/var/www/devDocuments/robert/pdftemp/";
+        $ext_pdfpath = "http://172.26.66.41/devDocuments/robert/pdftemp/";
 
-        // convert the file
-        //echo  $loc_pdfpath . ' ' . $loc_docpath . $inputname;
-        exec('/opt/libreoffice4.3/program/soffice.bin --writer --headless --convert-to pdf --nologo --outdir ' . $loc_pdfpath . ' ' . $loc_docpath . $inputname, $one, $two);
+        if (!file_exists($loc_pdfpath.$outputname)){
+            // Convert doc to pdf
+            exec('/opt/libreoffice4.3/program/soffice.bin --writer --headless --convert-to pdf --nologo --outdir ' . $loc_pdfpath . ' ' . $loc_docpath . $inputname, $one, $two);
+        }
+        
         //send the filename back
-        echo $json = $ext_pdfpath.$outputname;
+        echo $ext_pdfpath.$outputname;
     } 
     // if the file is a PDF file, just give it to the user (do not call LibreOffice):
     else {
         //Send filename back
-        echo $json = $ext_docpath.$inputname;
+        echo $ext_docpath.$inputname;
     }
 
 ?>

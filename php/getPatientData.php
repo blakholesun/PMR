@@ -22,7 +22,11 @@ nsa.NonScheduledActivityCode,
 --nsa.ObjectStatus,
 nsa.CreationDate,
 doc.FirstName,
-doc.LastName
+doc.LastName,
+pdiag.TumorSize, 
+pdiag.SummaryStage, 
+pdiag.StageCriteria, 
+diag.Description 
 
 FROM
 Patient pt
@@ -32,6 +36,8 @@ INNER JOIN NonScheduledActivity nsa ON pt.PatientSer = nsa.PatientSer
 INNER JOIN ActivityInstance aci ON nsa.ActivityInstanceSer = aci.ActivityInstanceSer
 INNER JOIN Activity ac ON aci.ActivitySer = ac.ActivitySer
 INNER JOIN Doctor doc ON doc.ResourceSer = pd.ResourceSer
+INNER JOIN Diagnosis diag ON pt.PatientSer = diag.PatientSer 
+INNER JOIN PrmryDiagnosis pdiag ON diag.DiagnosisSer = pdiag.DiagnosisSer 
 
 WHERE
 nsa.CreationDate >= DATEADD(day,-14,CONVERT(date,GETDATE()))
@@ -44,6 +50,8 @@ AND
 pd.PrimaryFlag = '1'
 AND
 pd.OncologistFlag = '1'
+AND
+diag.Description NOT LIKE '%ERROR%' 
 
 ORDER BY doc.FirstName ASC, nsa.CreationDate DESC";
 
@@ -56,6 +64,7 @@ if(!mssql_num_rows($query)) {
 }else{
 
   while($row = mssql_fetch_array($query)){
+
     $rowArr = array(
       'PatientID'     => $row[0],
       'LastName'      => $row[1],
@@ -63,7 +72,11 @@ if(!mssql_num_rows($query)) {
       'NSAC'          => $row[3],
       'CreationDate'  => $row[4],
       'DocFirstName'  => $row[5],
-      'DocLastName'   => $row[6]
+      'DocLastName'   => $row[6],
+      'TumorSize'     => $row[7],
+      'SummaryStage'  => $row[8],
+      'StageCriteria' => $row[9],
+      'Diagnosis'     => $row[10]
     );
     array_push($arr,$rowArr);
   }
@@ -71,7 +84,7 @@ if(!mssql_num_rows($query)) {
 }
   # JSON-encode the response
   //header('Content-Type: application/json');
-echo json_encode(array('list'=>$arr));
+echo str_replace("null","\"Not Available\"",json_encode(array('list'=>$arr)));
 
 
 

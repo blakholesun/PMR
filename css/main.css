@@ -1,11 +1,16 @@
   body {
     position        : relative; 
+    padding-top: 80px;
   }
   
+/*  .navbar{
+    height: 40px;
+  }*/
+
   div.jumbotron {
     margin          : 0;
     text-align      : center;
-    padding-top     : 150px;
+    /*padding-top     : 150px;*/
 
   }
   
@@ -48,37 +53,41 @@
     padding: 15px;
   }
 
-  #collapse1{
-    height      : auto;
-    max-height: 400px;
-    overflow-x      : hidden;
-  }
   /*=======================================
   Patient Info section
   =========================================*/
 
   #section2 {
     padding-top     :50px;
-    min-height      :1000px;
-    max-height: 1500px;
+    min-height      :900px;
+    max-height: 1040px;
     height          :auto;
   }
   
   .img-responsive {
-    height: 100%;
-    width: 100%;
+    height: auto;
+    width: 75%;
+    margin: auto;
   }
 
   /*#patients {
     color           : #000;
   }*/
 
+  #collapse1{
+    height      : auto;
+    max-height: 330px;
+    overflow-x      : hidden;
+    margin : auto;
+  }
+
   #Documents{
     width: 100%;
     height: auto;
+    margin: 0;
   }
 
-  .pdfobject-container { height: 850px;}
+  .pdfobject-container { height: 800px;}
   .pdfobject { border: 1px solid #666; }
 
   /*=======================================

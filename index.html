@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html >
+<html>
 <head>
   <title>Patient Management</title>
   <meta charset="utf-8">
@@ -45,8 +45,8 @@
               </li>
             </ul>
             <ul id="center" class = "nav navbar-nav">
-              <a href="#" class="btn btn-success" ng-show="rev1">Reviewed!</a>
-              <a href="#" class="btn btn-primary" ng-show="rev0">Review</a>
+              <!-- <a href="#" class="btn btn-primary" ng-show="!review" ng-click="toggle(); patientCompletionIncrement()">Review!</a>
+              <a href="#" class="btn btn-success" ng-show="review">Reviewed</a> -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="" ng-click="previousPatient(); grabPatientInfo()" >
@@ -58,11 +58,11 @@
             </ul>
           </div>
         </div>
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{patientCompletionCount}}"
-          aria-valuemin="0" aria-valuemax="{{data.length}}" style="width:20%">
+        <!-- <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{patientCompletionCount/data.length}}"
+          aria-valuemin="0" aria-valuemax="{{data.length}}" style="width:{{patientCompletionCount/data.length}}">
         </div>
-      </div>
+      </div> -->
     </div>
   </nav>    
 
@@ -112,44 +112,68 @@
   </div>
 
   <div id="section2" class="container-fluid">
-    <div class="row content">
-      <div class="col-sm-2">
-        <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
-        <p>
-          {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
-          {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}} <br>
-          ID: {{dataList[activeDoctorIndex].patients[activePatientIndex].ID}} <br>
-          Dr. {{dataList[activeDoctorIndex].lastName}}
-        </p>
-        <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" href="#collapse1">Documents</a>
-              </h4>
-            </div>
-            <div id="collapse1" class="panel-collapse collapse">
-              <ul class="list-group">
-                <li class="list-group-item" ng-repeat="x in documents">
-                  <a href="" ng-click="displayDocument(x.FileName)">{{x.DocType}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div><br>
-      </div>
+    <h1 style="text-align: center">
+      {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+      {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+      ({{patientID}})</h1> <br>
+      <div class="row content">
+        <div class="col-sm-2">
+          <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
+          <br>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <h4 class="list-group-item-heading">Diagnosis</h4>
+              <p class="list-group-item-text text-primary">
+                <strong>
+                  {{dataList[activeDoctorIndex].patients[activePatientIndex].diagnosis}}
+                </strong>
+              </p>
+            </li>
+            <!-- <li class="list-group-item">
+              <h4 class="list-group-item-heading">Staging</h4>
+              <p class="list-group-item-text">
+                {{dataList[activeDoctorIndex].patients[activePatientIndex].stageCriteria}}
+              </p>
+            </li> -->
+          </ul>
 
-      <div class="col-sm-10">
-        <div id="Documents" class="well">
-          <div id="Doc">
-            <H1> <center> Select a document to start reviewing! </center></H1>
+          <div class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse1">Documents</a> <br> <br>
+                  <form>
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" ng-model="docu">
+                      </div>      
+                    </div>
+                  </form>
+                </h4>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse in">
+                <ul class="list-group">
+                  <li class="list-group-item" ng-repeat="x in documents | filter:docu">
+                    <a href="" ng-click="displayDocument(x.FileName)">{{x.DocType}}</a> <br>
+                    <p><small>{{x.Date}}</small></p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div><br>
+        </div>
+
+        <div class="col-sm-10">
+          <div id="Documents" class="well">
+            <div id="Doc">
+              <H2> <center> Select a document to start reviewing! </center></H2>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <footer id="footer">Copyright © McGill University Health Centre</footer>
-</div>
+    <footer id="footer">Copyright © McGill University Health Centre</footer>
+  </div>
 </body>
 </html>

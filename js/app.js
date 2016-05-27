@@ -14,10 +14,15 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
 
     //Create a patient class to store names and id
-    function Patient(firstName, lastName, ID){
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.ID = ID;
+    function Patient(firstName, lastName, ID, tumorSize, summaryStage, stageCriteria, diagnosis){
+      this.firstName      = firstName;
+      this.lastName       = lastName;
+      this.ID             = ID;
+      this.tumorSize      = tumorSize;
+      this.summaryStage   = summaryStage;
+      this.stageCriteria  = stageCriteria;
+      this.diagnosis      = diagnosis;
+      this.isReviewed     = false;
     }
 
     var dataList = []; // the list of doctor objects with patients
@@ -33,19 +38,25 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
             dataList[dataList.length-1].patients.push(
               new Patient(  $scope.data[j].FirstName,
                             $scope.data[j].LastName,
-                            $scope.data[j].PatientID
-                )
+                            $scope.data[j].PatientID,
+                            $scope.data[j].TumorSize,
+                            $scope.data[j].SummaryStage,
+                            $scope.data[j].StageCriteria,
+                            $scope.data[j].Diagnosis
+                          )
               );
           }
         }
       }
     }
     $scope.dataList = dataList;
-    //$scope.patientCompletionCount = 0;
     $scope.activeDoctorIndex = 0; // set first doctor as default
     // Set first patient for first doctor
     $scope.activePatientIndex = 0; 
     $scope.patientID = $scope.dataList[0].patients[0].ID;
+
+    //Set the completion
+    $scope.patientCompletionCount = 0;
 
     // First patient info
     $http.post("php/getPatientPhoto.php", {patientID: $scope.patientID})
@@ -144,20 +155,14 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     });
   }
 
-  /*$scope.patientCompletionIncrement = function() {
-    $scope.patientCompletionCount++;
+  $scope.toggle = function() {
+    $scope.review = !$scope.review;
   }
 
-  $scope.patientCompletionDecrement = function() {
-    $scope.patientCompletionCount--;
-  }*/
-});
+  $scope.patientCompletionIncrement = function() {
+    $scope.patientCompletionCount++;
+    // Set completion in object to true
+    $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex] = true;
+  }
 
-// Controller to toggle the view wrt collapsible button selection
-//TODO Make it modular!
-app.controller('infoCtrl', function($scope){
-	$scope.myCarousel = true;
-  $scope.toggle = function() {
-   $scope.myCarousel = !$scope.myCarousel;
- }
 });
