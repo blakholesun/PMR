@@ -6,13 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap2.min.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link href="bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css" rel="stylesheet">
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
   <script src="bower_components/bootstrap-autohidingnavbar/src/jquery.bootstrap-autohidingnavbar.js
   "></script>
+  <script src="bower_components/progressbar.js/dist/progressbar.min.js"></script>
   <script src="js/app.js"></script>
 </head>
 
@@ -181,6 +181,7 @@
           <div id="Documents" class="well">
             <div id="Doc">
               <H2> <center> Select a document to start reviewing! </center></H2>
+               <div class="progress" id="progress"></div>
             </div>
           </div>
         </div>
