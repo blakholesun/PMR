@@ -50,7 +50,8 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       }
     }
     $scope.dataList = dataList;
-    $scope.activeDoctorIndex = 0; // set first doctor as default
+    // set first doctor as default
+    $scope.activeDoctorIndex = 0; 
     // Set first patient for first doctor
     $scope.activePatientIndex = 0; 
     $scope.patientID = $scope.dataList[0].patients[0].ID;
@@ -72,7 +73,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
   });
 
-  // Grab the data for each patient
+  // Grab the data for active patient when selecting frrom dropdown
   $scope.updateActivePatient = function(lookupID){
     var storedID, found = false;
     for (var i = 0; i < $scope.dataList.length && !found; i++){
@@ -88,6 +89,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
   }
 
+  //Grabs patient info on next or previous click
   $scope.grabPatientInfo = function() {
     var data = {
       patientID: $scope.patientID
@@ -104,6 +106,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
   }
 
+  // Moves to next patient and updates fields for current patient
   $scope.nextPatient = function(){
     var isLastDoctorPatient = $scope.dataList[$scope.activeDoctorIndex].patients.length-1 === 
     $scope.activePatientIndex;
@@ -122,6 +125,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
   }
 
+  // Moves to next patient and updates fields for current patient
   $scope.previousPatient = function(){
     var isFirstDoctorPatient = $scope.activePatientIndex === 0;
     var isFirstDoctor = $scope.activeDoctorIndex === 0;
@@ -141,6 +145,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
   }
 
+  // Grabbing the patient document that is clicked on
   $scope.displayDocument = function(filename){
     var data = {
       FileName: filename
@@ -155,14 +160,24 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     });
   }
 
-  $scope.toggle = function() {
-    $scope.review = !$scope.review;
+  //Filerting out the files that have consult and imrt in name
+  $scope.keepOnTop = function (x) {
+    var lowerCaseDoc = x.DocType.toLowerCase();
+    if (lowerCaseDoc.indexOf("consult") != -1 || lowerCaseDoc.indexOf("imrt") != -1) {
+      console.log(lowerCaseDoc);
+      return -1;
+    }else {
+      return 1;
+    }
   }
+/*  $scope.toggle = function() {
+    $scope.review = !$scope.review;
+  }*/
 
-  $scope.patientCompletionIncrement = function() {
+/*  $scope.patientCompletionIncrement = function() {
     $scope.patientCompletionCount++;
     // Set completion in object to true
     $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex] = true;
-  }
+  }*/
 
 });

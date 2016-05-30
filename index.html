@@ -9,15 +9,17 @@
   <link href="bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css" rel="stylesheet">
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
+  <script src="bower_components/bootstrap-autohidingnavbar/src/jquery.bootstrap-autohidingnavbar.js
+  "></script>
   <script src="js/app.js"></script>
 </head>
 
+<!-- NAVBAR -->
 <body data-target=".navbar" data-offset="50" ng-app="myApp" >
   <div ng-controller="pageController">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav id="nav" class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -65,12 +67,12 @@
       </div> -->
     </div>
   </nav>    
-
+<!-- WELCOME MESSAGE -->
   <div class="jumbotron">
     <h1>Welcome to Patient Management</h1>      
   </div>
 
-
+<!-- ANALYTICA MIGHT REMOVE -->
   <div id="section1" class="panel-group">
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -110,12 +112,24 @@
       </div>
     </div>
   </div>
-
+<hr>
+<!-- PATIENT REVIEW FIELD -->
   <div id="section2" class="container-fluid">
-    <h1 style="text-align: center">
-      {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
-      {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
-      ({{patientID}})</h1> <br>
+    <div class="row content">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-10">
+        <div>
+          <ul class="pager">
+            <li class="previous"><a href="" ng-click="previousPatient(); grabPatientInfo()">&larr; Previous</a></li>
+            <li id="patientname">
+              {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+              {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+              ({{patientID}})
+            </li>
+            <li class="next"><a href="" ng-click="nextPatient(); grabPatientInfo()">Next &rarr;</a></li>
+          </ul>
+        </div> <br>
+      </div>
       <div class="row content">
         <div class="col-sm-2">
           <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
@@ -137,7 +151,7 @@
             </li> -->
           </ul>
 
-          <div class="panel-group">
+          <div class="panel-group" style="margin:0;">
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
@@ -153,7 +167,7 @@
               </div>
               <div id="collapse1" class="panel-collapse collapse in">
                 <ul class="list-group">
-                  <li class="list-group-item" ng-repeat="x in documents | filter:docu">
+                  <li class="list-group-item" ng-repeat="x in documents | orderBy:keepOnTop | filter:docu">
                     <a href="" ng-click="displayDocument(x.FileName)">{{x.DocType}}</a> <br>
                     <p><small>{{x.Date}}</small></p>
                   </li>
@@ -175,5 +189,10 @@
 
     <footer id="footer">Copyright © McGill University Health Centre</footer>
   </div>
+  <script type="text/javascript">
+  $("nav").autoHidingNavbar({
+    //showOnBottom: true
+  });
+  </script>
 </body>
 </html>

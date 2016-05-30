@@ -58,15 +58,24 @@
   =========================================*/
 
   #section2 {
-    padding-top     :50px;
+    padding-top     :10px;
     min-height      :900px;
-    max-height: 1040px;
+    max-height: 1000px;
     height          :auto;
   }
   
+  .pager {
+    width: 100%;
+    margin: auto;
+  }
+
+  #patientname{
+    font-size: 30px;
+  }
+
+
   .img-responsive {
-    height: auto;
-    width: 75%;
+    width: 60%;
     margin: auto;
   }
 
