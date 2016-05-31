@@ -9,6 +9,7 @@
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/highcharts/highcharts.js"></script>
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
   <script src="bower_components/bootstrap-autohidingnavbar/src/jquery.bootstrap-autohidingnavbar.js
   "></script>
@@ -178,20 +179,27 @@
       <div class="col-sm-10">
         <div id="Documents" class="well">
           <div id="Doc">
-            <H2> <center> Select a document to start reviewing! </center></H2>
-            <div class="progress" id="progress"></div>
+            <H2> <center> Patient Planning Information </center></H2>
+            <div class="row content">
+              <div class="col-sm-6">
+                <div id="progress"></div>
+              </div>
+              <div class="col-sm-6">
+                Patient has started Treatment or not
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer id="footer">Copyright © McGill University Health Centre</footer>
+  <!-- <footer id="footer">Copyright © McGill University Health Centre</footer> -->
 </div>
 <script type="text/javascript">
 $("nav").autoHidingNavbar({
-    showOnBottom: false
-  });
+  showOnBottom: false
+});
 </script>
 </body>
 </html>

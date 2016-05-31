@@ -37,13 +37,13 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           if (docs[docs.length-1] === $scope.data[j].DocLastName){
             dataList[dataList.length-1].patients.push(
               new Patient(  $scope.data[j].FirstName,
-                            $scope.data[j].LastName,
-                            $scope.data[j].PatientID,
-                            $scope.data[j].TumorSize,
-                            $scope.data[j].SummaryStage,
-                            $scope.data[j].StageCriteria,
-                            $scope.data[j].Diagnosis
-                          )
+                $scope.data[j].LastName,
+                $scope.data[j].PatientID,
+                $scope.data[j].TumorSize,
+                $scope.data[j].SummaryStage,
+                $scope.data[j].StageCriteria,
+                $scope.data[j].Diagnosis
+                )
               );
           }
         }
@@ -70,7 +70,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
       $scope.documents = response.data
     });
-
+    chart();
   });
 
   // Grab the data for active patient when selecting frrom dropdown
@@ -103,8 +103,13 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       $scope.documents = response.data
       //console.log($scope.documents);
     });
-
+    repopulateDoc();
+    chart();
   }
+
+/*  var toggle = function(){
+    $scope.showDocs = !$scope.showDocs;
+  }*/
 
   // Moves to next patient and updates fields for current patient
   $scope.nextPatient = function(){
@@ -123,6 +128,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       $scope.activePatientIndex++;
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
+    
   }
 
   // Moves to next patient and updates fields for current patient
@@ -143,6 +149,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       $scope.activePatientIndex--;
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
+
   }
 
   // Grabbing the patient document that is clicked on
@@ -170,18 +177,79 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
   }
 
-  var bar = new ProgressBar.Circle(progress, {
-    strokeWidth: 6,
-    easing: 'easeInOut',
-    duration: 1400,
-    color: '#FFEA82',
-    trailColor: '#eee',
-    trailWidth: 1,
-    svgStyle: null
-  });
+  var repopulateDoc = function() {
+    var element = document.getElementById("Documents");
+    var original = document.getElementById("Doc");
+    element.removeChild(original);
 
-  bar.animate(1.0);  // Number from 0.0 to 1.0
-/*  $scope.toggle = function() {
+    element.innerHTML = '<div id="Doc">'+
+      '<H2> <center> Patient Planning Information </center></H2>' +
+      '<div class="row content">'+
+      '<div class="col-sm-6">'+
+      '<div id="progress"></div></div></div></div>';
+    
+
+
+    //$('#Documents').load('dash.html');
+  }
+
+  var chart = function () {
+      
+
+      $('#progress').highcharts({
+        chart: {
+          //backgroundColor: "#FFFFFF",
+          plotBackgroundColor: null,
+          plotBorderWidth: 0,
+          plotShadow: true
+        },
+        title: {
+          text: 'Planning<br>times',
+          align: 'center',
+          verticalAlign: 'middle',
+          //y: 40
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+          pie: {
+            dataLabels: {
+              enabled: true,
+              distance: -50,
+              style: {
+                fontWeight: 'bold',
+                color: 'white',
+                textShadow: '0px 1px 2px black'
+              }
+            },
+            startAngle: 0,
+            endAngle: 360,
+            //center: ['50%', '75%']
+          }
+        },
+        series: [{
+          type: 'pie',
+          name: 'Planning Time',
+          innerSize: '50%',
+          data: [
+          ['Firefox',   10.38],
+          ['IE',       56.33],
+          ['Chrome', 24.03],
+          ['Safari',    4.77],
+          ['Opera',     0.91],
+          {
+            name: 'Proprietary or Undetectable',
+            y: 0.2,
+            dataLabels: {
+              enabled: false
+            }
+          }
+          ]
+        }]
+      });
+    }
+  /*  $scope.toggle = function() {
     $scope.review = !$scope.review;
   }*/
 
