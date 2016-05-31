@@ -160,10 +160,10 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     });
   }
 
-  //Filerting out the files that have consult and imrt in name
+  //Filerting out the files that have distribution and imrt in name
   $scope.keepOnTop = function (x) {
     var lowerCaseDoc = x.DocType.toLowerCase();
-    if (lowerCaseDoc.indexOf("consult") != -1 || lowerCaseDoc.indexOf("eclipse") != -1) {
+    if (lowerCaseDoc.indexOf("distribution") != -1 || lowerCaseDoc.indexOf("imrt") != -1) {
       return -1;
     }else {
       return 1;

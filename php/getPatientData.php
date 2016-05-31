@@ -84,7 +84,9 @@ if(!mssql_num_rows($query)) {
 }
   # JSON-encode the response
   //header('Content-Type: application/json');
-echo str_replace("null","\"Not Available\"",json_encode(array('list'=>$arr)));
+$encoded = str_replace("\"StageCriteria\":null", 
+  "\"StageCriteria\":\"Stage Not Available\"", json_encode(array('list'=>$arr)));
+echo str_replace("null","\"Not Available\"",$encoded);
 
 
 
