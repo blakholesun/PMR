@@ -69,9 +69,9 @@
     </div>
   </nav>    
   <!-- WELCOME MESSAGE -->
-  <div class="jumbotron">
+  <!-- <div class="jumbotron">
     <h1>Welcome to Patient Management</h1>      
-  </div>
+  </div> -->
 
   <!-- ANALYTICA MIGHT REMOVE -->
   <div id="section1" class="panel-group">
@@ -81,7 +81,7 @@
           <a data-toggle="collapse" href="#collapse2">Weekly Analytics</a>
         </h4>
       </div>
-      <div id="collapse2" class="panel-collapse collapse">
+      <div id="collapse2" class="panel-collapse collapse in">
         <div class="container-fluid">
           <div id="fluid" class="container-fluid">
             <div class="col-sm-3">
@@ -139,14 +139,15 @@
         <ul class="list-group">
           <li class="list-group-item">
             <h5 class="list-group-item-heading">Diagnosis and Staging</h5>
-            <p class="list-group-item-text text-primary">
+            <p class="list-group-item-text text-primary" ng-repeat="x in patientDiagnosis">
               <strong>
-                {{dataList[activeDoctorIndex].patients[activePatientIndex].diagnosis}}
+                {{x.desc}}
               </strong>
+              <!--  {{x.dateStamp}} -->
             </p>
-            <p class="list-group-item-text text-primary">
-              {{dataList[activeDoctorIndex].patients[activePatientIndex].stageCriteria}}
-            </p>
+            <!-- <p class="list-group-item-text text-primary">
+              {{diagnosis.stageCriteria}}
+            </p> -->
           </li>
         </ul>
 
@@ -182,10 +183,28 @@
             <H2> <center> Patient Planning Information </center></H2>
             <div class="row content">
               <div class="col-sm-6">
-                <div id="progress"></div>
+                <div class="well">
+                  <H5> <center> General </center></H5>
+                  <ul class="list-group">
+                    <li class="list-group-item">Patient started: YES/NO</li>
+                    <li class="list-group-item">
+                      Patient Doctor: Dr. House 
+                    </li>
+                  </ul>
+                </div>
+                <div class="well">
+                  <H5> <center> Patient Appointments </center></H5>
+                  <ul class="list-group">
+                    <li class="list-group-item">Appointment 1</li>
+                    <li class="list-group-item">Appointment 2</li>
+                  </ul>
+                </div>
               </div>
               <div class="col-sm-6">
-                Patient has started Treatment or not
+                <div class="well">
+                  <H5> <center> Chart of Patient Planning times </center></H5>
+                  <div id="progress"></div>
+                </div>
               </div>
             </div>
           </div>

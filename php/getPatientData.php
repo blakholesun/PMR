@@ -26,7 +26,8 @@ doc.LastName,
 pdiag.TumorSize, 
 pdiag.SummaryStage, 
 pdiag.StageCriteria, 
-diag.Description 
+diag.Description,
+diag.DateStamp
 
 FROM
 Patient pt
@@ -42,8 +43,8 @@ INNER JOIN PrmryDiagnosis pdiag ON diag.DiagnosisSer = pdiag.DiagnosisSer
 WHERE
 nsa.CreationDate >= DATEADD(day,-14,CONVERT(date,GETDATE()))
 AND
-nsa.NonScheduledActivityCode LIKE '%Open%'
---nsa.NonScheduledActivityCode LIKE '%Completed%'
+--nsa.NonScheduledActivityCode LIKE '%Open%'
+nsa.NonScheduledActivityCode LIKE '%Completed%'
 AND
 ac.ActivityCode LIKE '%PMR%'
 AND
@@ -76,7 +77,8 @@ if(!mssql_num_rows($query)) {
       'TumorSize'     => $row[7],
       'SummaryStage'  => $row[8],
       'StageCriteria' => $row[9],
-      'Diagnosis'     => $row[10]
+      'Diagnosis'     => $row[10],
+      'DiagDate'      => $row[11]
     );
     array_push($arr,$rowArr);
   }
@@ -86,6 +88,7 @@ if(!mssql_num_rows($query)) {
   //header('Content-Type: application/json');
 $encoded = str_replace("\"StageCriteria\":null", 
   "\"StageCriteria\":\"Stage Not Available\"", json_encode(array('list'=>$arr)));
+$encoded = str_replace("Malignant neoplasm of", "CA - ", $encoded);
 echo str_replace("null","\"Not Available\"",$encoded);
 
 

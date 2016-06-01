@@ -5,7 +5,6 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
   // Grab the list of patients and categorize by doctor
   $http.get("php/getPatientData.php").then(function (response) {
     $scope.data=response.data.list;
-
     //Create a doctor class to store names and list of patients
     function Doctor(firstName, lastName){
       this.firstName = firstName;
@@ -14,37 +13,67 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
 
     //Create a patient class to store names and id
-    function Patient(firstName, lastName, ID, tumorSize, summaryStage, stageCriteria, diagnosis){
+    function Patient(firstName, lastName, ID){
       this.firstName      = firstName;
       this.lastName       = lastName;
       this.ID             = ID;
-      this.tumorSize      = tumorSize;
-      this.summaryStage   = summaryStage;
-      this.stageCriteria  = stageCriteria;
-      this.diagnosis      = diagnosis;
+      this.diagnosis      = [];
       this.isReviewed     = false;
     }
 
+    //
+    function Diagnosis(desc, tumorSize, summaryStage, stageCriteria, dateStamp){
+      this.desc           = desc;
+      this.tumorSize      = tumorSize;
+      this.summaryStage   = summaryStage;
+      this.stageCriteria  = stageCriteria;
+      this.dateStamp      = dateStamp;
+    }
+
     var dataList = []; // the list of doctor objects with patients
-    var docs = []; // create an array to hold doctor names
+    var docsInList = []; // create an array to hold doctor names
     var index;
+    var indexPat;
+
+    // scan thorugh whole sql table
     for (var i = 0; i < $scope.data.length; i++){
-      index = docs.indexOf($scope.data[i].DocLastName);
+      //load index of doctor lastname
+      index = docsInList.indexOf($scope.data[i].DocLastName);
+      //check if doctor already in list exists
       if (index === -1){
-        docs.push($scope.data[i].DocLastName);
+        //if not push doc name to list of already found doctors
+        docsInList.push($scope.data[i].DocLastName);
+        //push doctot to list to be stored in scope
         dataList.push(new Doctor($scope.data[i].DocFirstName,$scope.data[i].DocLastName));
+        // look though list for patients with same doctor
+        var patientsInList = [];
         for (var j = 0; j<$scope.data.length; j++){
-          if (docs[docs.length-1] === $scope.data[j].DocLastName){
-            dataList[dataList.length-1].patients.push(
-              new Patient(  $scope.data[j].FirstName,
-                $scope.data[j].LastName,
-                $scope.data[j].PatientID,
-                $scope.data[j].TumorSize,
-                $scope.data[j].SummaryStage,
-                $scope.data[j].StageCriteria,
-                $scope.data[j].Diagnosis
-                )
-              );
+          if (docsInList[docsInList.length-1] === $scope.data[j].DocLastName){
+            // push patients in doctor list
+            indexPat = patientsInList.indexOf($scope.data[j].PatientID);
+            if ( indexPat === -1){
+              patientsInList.push($scope.data[j].PatientID);
+              var diagnosisData = new Diagnosis($scope.data[j].Diagnosis,
+                                          $scope.data[j].TumorSize,
+                                          $scope.data[j].SummaryStage,
+                                          $scope.data[j].StageCriteria,
+                                          $scope.data[j].DiagDate);
+
+              var patient = new Patient(  $scope.data[j].FirstName,
+                                        $scope.data[j].LastName,
+                                        $scope.data[j].PatientID);
+            
+              patient.diagnosis.push(diagnosisData);
+              dataList[dataList.length-1].patients.push(patient);
+            } else {
+              var diagnosisData = new Diagnosis($scope.data[j].Diagnosis,
+                                          $scope.data[j].TumorSize,
+                                          $scope.data[j].SummaryStage,
+                                          $scope.data[j].StageCriteria);
+              dataList[dataList.length-1]
+                .patients[dataList[dataList.length-1].patients.length-1]
+                .diagnosis.push(diagnosisData);
+            }
           }
         }
       }
@@ -55,7 +84,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     // Set first patient for first doctor
     $scope.activePatientIndex = 0; 
     $scope.patientID = $scope.dataList[0].patients[0].ID;
-
+    $scope.patientDiagnosis = $scope.dataList[0].patients[0].diagnosis;
     //Set the completion
     $scope.patientCompletionCount = 0;
 
@@ -84,6 +113,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           $scope.activeDoctorIndex = i;
           $scope.activePatientIndex = j;
           $scope.patientID = lookupID;
+          $scope.patientDiagnosis = $scope.dataList[i].patients[j].diagnosis;
         }
       }
     }
@@ -128,7 +158,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       $scope.activePatientIndex++;
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
-    
+    $scope.patientDiagnosis = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].diagnosis;
   }
 
   // Moves to next patient and updates fields for current patient
@@ -149,6 +179,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       $scope.activePatientIndex--;
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
+    $scope.patientDiagnosis = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].diagnosis;
 
   }
 
@@ -183,10 +214,34 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     element.removeChild(original);
 
     element.innerHTML = '<div id="Doc">'+
-      '<H2> <center> Patient Planning Information </center></H2>' +
-      '<div class="row content">'+
-      '<div class="col-sm-6">'+
-      '<div id="progress"></div></div></div></div>';
+            '<H2> <center> Patient Planning Information </center></H2>'+
+            '<div class="row content">'+
+              '<div class="col-sm-6">'+
+                '<div class="well">'+
+                '<H5> <center> General </center></H5>'+
+                  '<ul class="list-group">'+
+                    '<li class="list-group-item">Patient started: YES/NO</li>'+
+                    '<li class="list-group-item">'+
+                      'Patient Doctor: Dr. House' +
+                    '</li>'+
+                    '</ul>'+
+               '</div>'+
+               '<div class="well">'+
+                  '<H5> <center> Patient Appointments </center></H5>'+
+                  '<ul class="list-group">'+
+                    '<li class="list-group-item">Appointment 1</li>'+
+                    '<li class="list-group-item">Appointment 2</li>'+
+                  '</ul>'+
+                '</div>'+
+              '</div>'+
+              '<div class="col-sm-6">'+
+                '<div class="well">'+
+                  '<H5> <center> Chart of Patient Planning times </center></H5>'+
+                  '<div id="progress"></div>'+
+                '</div>'+
+              '</div>'+
+            '</div>'+
+          '</div>';
     
 
 
