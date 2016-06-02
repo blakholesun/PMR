@@ -77,9 +77,9 @@
   <div id="section1" class="panel-group">
     <div class="panel panel-primary">
       <div class="panel-heading">
-        <h4 id="analytics1" class="panel-title">
+        <h3 id="analytics1" class="panel-title">
           <a data-toggle="collapse" href="#collapse2">Weekly Analytics</a>
-        </h4>
+        </h3>
       </div>
       <div id="collapse2" class="panel-collapse collapse in">
         <div class="container-fluid">
@@ -129,33 +129,42 @@
             </li>
             <li class="next"><a href="" ng-click="nextPatient(); grabPatientInfo()">Next &rarr;</a></li>
           </ul>
-        </div> <br>
+        </div>
       </div>
     </div>
     <div class="row content">
-      <div class="col-sm-2">
+      <div class="col-sm-2" id="sidepane">
         <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
         <br>
-        <ul class="list-group">
+        <!-- <ul class="list-group">
           <li class="list-group-item">
             <h5 class="list-group-item-heading">Diagnosis and Staging</h5>
-            <p class="list-group-item-text text-primary" ng-repeat="x in patientDiagnosis">
-              <strong>
-                {{x.desc}}
-              </strong>
-              <!--  {{x.dateStamp}} -->
+            <p class="list-group-item-text text-primary" ng-repeat-start="x in patientDiagnosis">
+              {{x.desc}}
             </p>
-            <!-- <p class="list-group-item-text text-primary">
-              {{diagnosis.stageCriteria}}
-            </p> -->
+            <p ng-repeat-end="x in patientDocuments" class="list-group-item-text text-danger">
+              {{x.stageCriteria}}
+            </p>
           </li>
-        </ul>
+        </ul> -->
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h2 class="panel-title">Diagnosis and Staging</h2>
+          </div>
+          <div class="panel-body">
+            <span ng-repeat-start="x in patientDiagnosis">
+              [{{$index+1}}] <strong>{{x.desc}}</strong> <br></span>
+            <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'">{{x.stageCriteria}}</p>
+            <span ng-repeat-end="x in patientDiagnosis"><small><em>{{x.dateStamp}}</em></small></span>
+          </div>
+        </div>
+
 
         <div class="panel-group" style="margin:0;">
-          <div class="panel panel-default">
+          <div class="panel panel-primary">
             <div class="panel-heading">
-              <h5 class="panel-title">
-                <a data-toggle="collapse" href="#collapse1">Documents</a> <br> <br>
+              <H2 class="panel-title">
+                <a data-toggle="collapse" href="#collapse1">Documents</a> <br>
                 <form>
                   <div class="form-group">
                     <div class="input-group">
@@ -163,12 +172,12 @@
                     </div>      
                   </div>
                 </form>
-              </h5>
+              </H2>
             </div>
             <div id="collapse1" class="panel-collapse collapse in">
               <ul class="list-group">
                 <li class="list-group-item" ng-repeat="x in documents | orderBy:keepOnTop | filter:docu">
-                  <a href="" ng-click="displayDocument(x.FileName)">{{x.DocType}}</a> <br>
+                  <a href="#docpane" ng-click="displayDocument(x.FileName)">{{x.DocType}}</a>
                   <p><small>{{x.Date}}</small></p>
                 </li>
               </ul>
@@ -179,9 +188,46 @@
 
       <div class="col-sm-10">
         <div id="Documents" class="well">
-          <div id="Doc">
-            <H2> <center> Patient Planning Information </center></H2>
             <div class="row content">
+
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">
+                  Overview</a></li>
+                  <li class=""><a href="#docpane" data-toggle="tab" aria-expanded="false">
+                    Documents</a></li>
+                  </ul>
+
+                  <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane active fade in" id="overview">
+                      <div class="col-sm-4">
+                        <div class="well">
+                          <H5> <center> General </center></H5>
+                          <ul class="list-group">
+                            <li class="list-group-item">Patient started: YES/NO</li>
+                            <li class="list-group-item">
+                              Patient Doctor: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}
+                            </li>
+                            <li class="list-group-item" ng-repeat="x in TreatmentInfo">
+                              {{x.Plan}}: {{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-sm-8">
+                        <div class="well">
+                          <H5> <center> Chart of Patient Planning times </center></H5>
+                          <div id="progress"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="docpane">
+                      <div id="Doc">
+                        <h2>Select a document!</h2>
+                      </div>
+                    </div>
+                  </div>
+
+<!-- 
               <div class="col-sm-6">
                 <div class="well">
                   <H5> <center> General </center></H5>
@@ -205,9 +251,8 @@
                   <H5> <center> Chart of Patient Planning times </center></H5>
                   <div id="progress"></div>
                 </div>
-              </div>
+              </div> -->
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -217,7 +262,7 @@
 </div>
 <script type="text/javascript">
 $("nav").autoHidingNavbar({
-  showOnBottom: false
+  //showOnBottom: false
 });
 </script>
 </body>

@@ -58,7 +58,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
                                           $scope.data[j].SummaryStage,
                                           $scope.data[j].StageCriteria,
                                           $scope.data[j].DiagDate);
-
+              //console.log($scope.data[j].DiagDate);
               var patient = new Patient(  $scope.data[j].FirstName,
                                         $scope.data[j].LastName,
                                         $scope.data[j].PatientID);
@@ -69,7 +69,8 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
               var diagnosisData = new Diagnosis($scope.data[j].Diagnosis,
                                           $scope.data[j].TumorSize,
                                           $scope.data[j].SummaryStage,
-                                          $scope.data[j].StageCriteria);
+                                          $scope.data[j].StageCriteria,
+                                          $scope.data[j].DiagDate);
               dataList[dataList.length-1]
                 .patients[dataList[dataList.length-1].patients.length-1]
                 .diagnosis.push(diagnosisData);
@@ -99,6 +100,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
       $scope.documents = response.data
     });
+    getPatientTreatmentinfo();
     chart();
   });
 
@@ -133,7 +135,9 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       $scope.documents = response.data
       //console.log($scope.documents);
     });
+    console.log($scope.dataList);
     repopulateDoc();
+    getPatientTreatmentinfo();
     chart();
   }
 
@@ -208,49 +212,36 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
   }
 
+  var getPatientTreatmentinfo = function() {
+    $http.post("php/queryTreatment.php", {patientID: $scope.patientID})
+    .then( function (response) {
+      $scope.TreatmentInfo = [];
+      var TreatmentInfo = response.data;
+      var i = 0;
+      for (item in TreatmentInfo['0']){
+        if (TreatmentInfo['0'][item].hasOwnProperty('dose')){
+          $scope.TreatmentInfo.push(new Object());
+          $scope.TreatmentInfo[i].Dose =  TreatmentInfo['0'][item].dose;
+          $scope.TreatmentInfo[i].noFractions = TreatmentInfo['0'][item].nofractions;
+          $scope.TreatmentInfo[i].Plan = TreatmentInfo['0'][item].name;
+          i++
+        }
+      }
+      
+    });
+  }
+
+
   var repopulateDoc = function() {
-    var element = document.getElementById("Documents");
+    var element = document.getElementById("docpane");
     var original = document.getElementById("Doc");
     element.removeChild(original);
 
-    element.innerHTML = '<div id="Doc">'+
-            '<H2> <center> Patient Planning Information </center></H2>'+
-            '<div class="row content">'+
-              '<div class="col-sm-6">'+
-                '<div class="well">'+
-                '<H5> <center> General </center></H5>'+
-                  '<ul class="list-group">'+
-                    '<li class="list-group-item">Patient started: YES/NO</li>'+
-                    '<li class="list-group-item">'+
-                      'Patient Doctor: Dr. House' +
-                    '</li>'+
-                    '</ul>'+
-               '</div>'+
-               '<div class="well">'+
-                  '<H5> <center> Patient Appointments </center></H5>'+
-                  '<ul class="list-group">'+
-                    '<li class="list-group-item">Appointment 1</li>'+
-                    '<li class="list-group-item">Appointment 2</li>'+
-                  '</ul>'+
-                '</div>'+
-              '</div>'+
-              '<div class="col-sm-6">'+
-                '<div class="well">'+
-                  '<H5> <center> Chart of Patient Planning times </center></H5>'+
-                  '<div id="progress"></div>'+
-                '</div>'+
-              '</div>'+
-            '</div>'+
-          '</div>';
-    
-
-
+    element.innerHTML = '<div id="Doc"><h2>Select a document!</h2></div>'
     //$('#Documents').load('dash.html');
   }
 
   var chart = function () {
-      
-
       $('#progress').highcharts({
         chart: {
           //backgroundColor: "#FFFFFF",
@@ -313,5 +304,4 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     // Set completion in object to true
     $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex] = true;
   }*/
-
 });

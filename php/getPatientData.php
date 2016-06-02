@@ -12,7 +12,7 @@ if (!$link) {
 
 $sql = "
 USE variansystem;
-SELECT DISTINCT
+SELECT
 pt.PatientId,
 pt.LastName,
 pt.FirstName,
@@ -27,7 +27,7 @@ pdiag.TumorSize,
 pdiag.SummaryStage, 
 pdiag.StageCriteria, 
 diag.Description,
-diag.DateStamp
+CAST(diag.DateStamp AS DATE) as DiagDate
 
 FROM
 Patient pt
@@ -54,7 +54,7 @@ pd.OncologistFlag = '1'
 AND
 diag.Description NOT LIKE '%ERROR%' 
 
-ORDER BY doc.FirstName ASC, nsa.CreationDate DESC";
+ORDER BY doc.FirstName ASC, pt.LastName, DiagDate DESC";
 
 $query = mssql_query($sql); //or die('Query Failed.');
 //echo $query;

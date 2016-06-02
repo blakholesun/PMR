@@ -1,6 +1,11 @@
   body {
     position        : relative; 
     padding-top: 80px;
+    font-size: 200%;
+  }
+
+  p{
+    margin: 0;
   }
   
 /*  .navbar{
@@ -59,7 +64,7 @@
 
   #section2 {
     padding-top     :10px;
-    min-height      :900px;
+    min-height      :1000px;
     max-height: 1100px;
     height          :auto;
   }
@@ -70,7 +75,7 @@
   }
 
   #patientname{
-    font-size: 30px;
+    font-size: 200%;
     font-weight: bold;
   }
 
@@ -83,12 +88,15 @@
   /*#patients {
     color           : #000;
   }*/
-
+  #sidepane{
+    font-size: 80%;
+  }
   #collapse1{
     height      : auto;
     max-height: 330px;
     overflow-x      : hidden;
     margin : auto;
+    
   }
 
   #Documents{
@@ -99,6 +107,10 @@
 
   .pdfobject-container { height: 800px;}
   .pdfobject { border: 1px solid #666; }
+
+/*  .tab-content .tab-pane {    
+    position: relative;
+}*/
 
   /*=======================================
   Footer
