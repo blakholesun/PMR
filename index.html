@@ -117,48 +117,18 @@
   <!-- PATIENT REVIEW FIELD -->
   <div id="section2" class="container-fluid">
     <div class="row content">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-10">
-        <div>
-          <ul class="pager">
-            <li class="previous"><a href="" ng-click="previousPatient(); grabPatientInfo()">&larr; Previous</a></li>
-            <li id="patientname">
-              {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
-              {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
-              ({{patientID}})
-            </li>
-            <li class="next"><a href="" ng-click="nextPatient(); grabPatientInfo()">Next &rarr;</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="row content">
       <div class="col-sm-2" id="sidepane">
-        <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
-        <br>
-        <!-- <ul class="list-group">
-          <li class="list-group-item">
-            <h5 class="list-group-item-heading">Diagnosis and Staging</h5>
-            <p class="list-group-item-text text-primary" ng-repeat-start="x in patientDiagnosis">
-              {{x.desc}}
-            </p>
-            <p ng-repeat-end="x in patientDocuments" class="list-group-item-text text-danger">
-              {{x.stageCriteria}}
-            </p>
-          </li>
-        </ul> -->
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h2 class="panel-title">Diagnosis and Staging</h2>
+            <h2 class="panel-title">
+              {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+              {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+            </h2>
           </div>
           <div class="panel-body">
-            <span ng-repeat-start="x in patientDiagnosis">
-              [{{$index+1}}] <strong>{{x.desc}}</strong> <br></span>
-            <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'">{{x.stageCriteria}}</p>
-            <span ng-repeat-end="x in patientDiagnosis"><small><em>{{x.dateStamp}}</em></small></span>
+            <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
           </div>
         </div>
-
 
         <div class="panel-group" style="margin:0;">
           <div class="panel panel-primary">
@@ -177,8 +147,9 @@
             <div id="collapse1" class="panel-collapse collapse in">
               <ul class="list-group">
                 <li class="list-group-item" ng-repeat="x in documents | orderBy:keepOnTop | filter:docu">
-                  <a href="#docpane" ng-click="displayDocument(x.FileName)">{{x.DocType}}</a>
-                  <p><small>{{x.Date}}</small></p>
+                  <a href="#docpane" ng-click="displayDocument(x.FileName)" ng-class="
+                  (x.ApprovalStatus == 'Approved' || x.Signed == 'Signed') ? 'text-success' : 'text-danger'"><strong>{{x.DocType}}</strong></a>
+                  <p><small>{{x.Date | date:'short'}} <!-- {{x.ApprovalStatus}} --></small></p>
                 </li>
               </ul>
             </div>
@@ -187,83 +158,100 @@
       </div>
 
       <div class="col-sm-10">
-        <div id="Documents" class="well">
-            <div class="row content">
+       <!--  <div> -->
+          <!-- <ul class="pager">
+            <li class="previous"><a href="" ng-click="previousPatient(); grabPatientInfo()">&larr; Previous</a></li>
+            <li id="patientname"> -->
+              <h2 style="margin: 0;"><center>{{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+                {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+                ({{patientID}})</center></h2>
+            <!-- </li>
+            <li class="next"><a href="" ng-click="nextPatient(); grabPatientInfo()">Next &rarr;</a></li>
+          </ul> -->
+          <!--  </div> -->
 
+          <div id="Documents" >
+            <div class="row content">
               <ul class="nav nav-tabs">
                 <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">
-                  Overview</a></li>
-                  <li class=""><a href="#docpane" data-toggle="tab" aria-expanded="false">
-                    Documents</a></li>
-                  </ul>
+                  Overview</a>
+                </li>
+                <li class=""><a href="#docpane" data-toggle="tab" aria-expanded="false">
+                  Documents</a>
+                </li>
+              </ul> <br>
 
-                  <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane active fade in" id="overview">
-                      <div class="col-sm-4">
-                        <div class="well">
-                          <H5> <center> General </center></H5>
-                          <ul class="list-group">
-                            <li class="list-group-item">Patient started: YES/NO</li>
-                            <li class="list-group-item">
-                              Patient Doctor: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}
-                            </li>
-                            <li class="list-group-item" ng-repeat="x in TreatmentInfo">
-                              {{x.Plan}}: {{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div class="col-sm-8">
-                        <div class="well">
-                          <H5> <center> Chart of Patient Planning times </center></H5>
-                          <div id="progress"></div>
-                        </div>
+              <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active fade in" id="overview">
+                  <div class="col-sm-3">
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><strong>General</strong></div>
+                        <ul class="list-group">
+                          <li class="list-group-item">New Start: $$DATE$$</li>
+                          <li class="list-group-item">Doctor: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}</li>
+                        </ul>
                       </div>
                     </div>
-                    <div class="tab-pane fade" id="docpane">
-                      <div id="Doc">
-                        <h2>Select a document!</h2>
+                    <div class="panel panel-default">
+                      <div class="panel-heading"><strong>Diagnosis and Staging</strong></div>
+                      <ul class="list-group">
+                        <li class="list-group-item">
+                          <span ng-repeat-start="x in patientDiagnosis" class="text-primary">
+                            [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
+                          </span>
+                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px">{{x.stageCriteria}}</p>
+                          <span ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small><em>{{x.dateStamp}}</em></small><br></span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Prescription</strong></div>
+                        <ul class="list-group">
+                          <li class="list-group-item" ng-repeat="x in TreatmentInfo">
+                            {{x.Plan}}: <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
-
-<!-- 
-              <div class="col-sm-6">
-                <div class="well">
-                  <H5> <center> General </center></H5>
-                  <ul class="list-group">
-                    <li class="list-group-item">Patient started: YES/NO</li>
-                    <li class="list-group-item">
-                      Patient Doctor: Dr. House 
-                    </li>
-                  </ul>
+                  <div class="col-sm-3">
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Required Documents</strong></div>
+                        <ul class="list-group">
+                          <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-success' : 'list-group-item list-group-item-danger')">{{x.fileType}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="panel-group">
+                      <div class="panel panel-info">
+                        <div class="panel-heading">Chart of Patient Planning times </div>
+                        <div id="progress"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="well">
-                  <H5> <center> Patient Appointments </center></H5>
-                  <ul class="list-group">
-                    <li class="list-group-item">Appointment 1</li>
-                    <li class="list-group-item">Appointment 2</li>
-                  </ul>
+                <div class="tab-pane fade" id="docpane">
+                  <div id="Doc">
+                    <h2>Select a document!</h2>
+                  </div>
                 </div>
               </div>
-              <div class="col-sm-6">
-                <div class="well">
-                  <H5> <center> Chart of Patient Planning times </center></H5>
-                  <div id="progress"></div>
-                </div>
-              </div> -->
             </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- <footer id="footer">Copyright © McGill University Health Centre</footer> -->
-</div>
-<script type="text/javascript">
-$("nav").autoHidingNavbar({
-  //showOnBottom: false
-});
+  <script type="text/javascript">
+    /*$("nav").autoHidingNavbar({
+      //showOnBottom: false
+    });*/
 </script>
 </body>
 </html>

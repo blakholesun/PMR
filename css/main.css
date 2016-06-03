@@ -93,7 +93,7 @@
   }
   #collapse1{
     height      : auto;
-    max-height: 330px;
+    max-height: 500px;
     overflow-x      : hidden;
     margin : auto;
     
@@ -121,7 +121,7 @@
   }
 
   #progress {
-    height: 300px; 
-    width: 50%;
+    height: auto; 
+    width: auto;
     margin: 0 auto;
   }

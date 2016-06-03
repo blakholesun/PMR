@@ -99,6 +99,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $http.post( "php/getPatientDocuments.php", {patientID: $scope.patientID})
     .then( function (response) {
       $scope.documents = response.data
+      checkDocs(response.data);
     });
     getPatientTreatmentinfo();
     chart();
@@ -133,17 +134,13 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
     $http.post( "php/getPatientDocuments.php", data).then( function (response) {
       $scope.documents = response.data
-      //console.log($scope.documents);
+      checkDocs(response.data);
     });
-    console.log($scope.dataList);
+    //console.log($scope.dataList);
     repopulateDoc();
     getPatientTreatmentinfo();
     chart();
   }
-
-/*  var toggle = function(){
-    $scope.showDocs = !$scope.showDocs;
-  }*/
 
   // Moves to next patient and updates fields for current patient
   $scope.nextPatient = function(){
@@ -202,7 +199,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     });
   }
 
-  //Filerting out the files that have distribution and imrt in name
+  //Filerting out the files that have distribution and imrt in name for documents list
   $scope.keepOnTop = function (x) {
     var lowerCaseDoc = x.DocType.toLowerCase();
     if (lowerCaseDoc.indexOf("distribution") != -1 || lowerCaseDoc.indexOf("imrt") != -1) {
@@ -212,6 +209,34 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
   }
 
+  var checkDocs = function(data){
+    function Document(fileType){
+        this.fileType = fileType;
+        this.creationDate = 0;
+        this.isAvailable = false;
+      }  
+
+      $scope.requiredDocuments = [new Document("RO-Consult"), new Document("Pathology"),
+                                  new Document("Rad Onc Requisition"), 
+                                  new Document("RO-CT Planning Sheet"),
+                                  new Document("Radiotherapy Prescription")];
+      var namesearch = ["consult", "pathology", "requisition", "planning sheet", "radiotherapy prescription"];
+      var x;
+      for (x in data){        
+        var name = data[x].DocType.toLowerCase();
+        var date = new Date(data[x].Date.substring(0,11));
+        var cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate()-90)
+        for (var i =0; i<namesearch.length; i++){
+          if(name.indexOf(namesearch[i]) != -1 && date > cutoffDate){
+            $scope.requiredDocuments[i].isAvailable = true;
+          }  
+        }
+        
+      }
+  }
+
+  // Grab Patient specific treatment info
   var getPatientTreatmentinfo = function() {
     $http.post("php/queryTreatment.php", {patientID: $scope.patientID})
     .then( function (response) {
@@ -231,17 +256,19 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     });
   }
 
-
+  // insert placeholder in the Documents tab
   var repopulateDoc = function() {
     var element = document.getElementById("docpane");
     var original = document.getElementById("Doc");
     element.removeChild(original);
-
     element.innerHTML = '<div id="Doc"><h2>Select a document!</h2></div>'
-    //$('#Documents').load('dash.html');
   }
 
+  // High chart for displaying patient planning info
   var chart = function () {
+
+
+
       $('#progress').highcharts({
         chart: {
           //backgroundColor: "#FFFFFF",
