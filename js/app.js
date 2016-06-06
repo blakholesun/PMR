@@ -102,6 +102,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       checkDocs(response.data);
     });
     getPatientTreatmentinfo();
+    getNewStart();
     chart();
   });
 
@@ -139,6 +140,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     //console.log($scope.dataList);
     repopulateDoc();
     getPatientTreatmentinfo();
+    getNewStart();
     chart();
   }
 
@@ -226,7 +228,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
         var name = data[x].DocType.toLowerCase();
         var date = new Date(data[x].Date.substring(0,11));
         var cutoffDate = new Date();
-        cutoffDate.setDate(cutoffDate.getDate()-90)
+        cutoffDate.setDate(cutoffDate.getDate()-180)
         for (var i =0; i<namesearch.length; i++){
           if(name.indexOf(namesearch[i]) != -1 && date > cutoffDate){
             $scope.requiredDocuments[i].isAvailable = true;
@@ -249,10 +251,16 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           $scope.TreatmentInfo[i].Dose =  TreatmentInfo['0'][item].dose;
           $scope.TreatmentInfo[i].noFractions = TreatmentInfo['0'][item].nofractions;
           $scope.TreatmentInfo[i].Plan = TreatmentInfo['0'][item].name;
-          i++
+          i++;
         }
       }
-      
+    });
+  }
+
+  var getNewStart = function(){
+    $http.post("php/getNewStart.php", {patientID: $scope.patientID})
+    .then( function (response) {
+      $scope.NewStart = response.data.startDate;
     });
   }
 

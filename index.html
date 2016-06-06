@@ -4,6 +4,7 @@
   <title>Patient Management</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="">
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap2.min.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -126,7 +127,10 @@
             </h2>
           </div>
           <div class="panel-body">
-            <img class="img-responsive img-rounded" ng-src="data:image/JPEG;base64,{{patientPhoto}}">
+            <img class="img-responsive img-rounded" ng-if="patientPhoto != 'No records found.' " 
+            ng-src="data:image/JPEG;base64,{{patientPhoto}}">
+            <img class="img-responsive img-rounded" ng-if="patientPhoto == 'No records found.' " 
+            ng-src="img/noimage.png">
           </div>
         </div>
 
@@ -188,20 +192,20 @@
                       <div class="panel panel-default">
                         <div class="panel-heading"><strong>General</strong></div>
                         <ul class="list-group">
-                          <li class="list-group-item">New Start: $$DATE$$</li>
+                          <li class="list-group-item">New Start: {{NewStart}}</li>
                           <li class="list-group-item">Doctor: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}</li>
                         </ul>
                       </div>
                     </div>
                     <div class="panel panel-default">
-                      <div class="panel-heading"><strong>Diagnosis and Staging</strong></div>
+                      <div class="panel-heading"><strong>Diagnosis</strong></div>
                       <ul class="list-group">
                         <li class="list-group-item">
                           <span ng-repeat-start="x in patientDiagnosis" class="text-primary">
                             [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
                           </span>
-                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px">{{x.stageCriteria}}</p>
-                          <span ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small><em>{{x.dateStamp}}</em></small><br></span>
+                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px">Staging: {{x.stageCriteria}}</p>
+                          <span ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small>Diagnosis Date: {{x.dateStamp}}</small><br></span>
                         </li>
                       </ul>
                     </div>
@@ -229,8 +233,8 @@
                   </div>
                   <div class="col-sm-6">
                     <div class="panel-group">
-                      <div class="panel panel-info">
-                        <div class="panel-heading">Chart of Patient Planning times </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Chart of Patient Planning times</strong></div>
                         <div id="progress"></div>
                       </div>
                     </div>

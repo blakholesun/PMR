@@ -23,6 +23,11 @@
     height      : auto;
     max-height: 400px;
     overflow-x      : hidden;
+    font-size: 90%;
+  }
+
+  .dropdown-header {
+    font-size: 110%;
   }
 
   .progress {height: 10px;}

@@ -27,7 +27,7 @@ pdiag.TumorSize,
 pdiag.SummaryStage, 
 pdiag.StageCriteria, 
 diag.Description,
-CAST(diag.DateStamp AS DATE) as DiagDate
+diag.DateStamp as DiagDate
 
 FROM
 Patient pt
@@ -65,7 +65,15 @@ if(!mssql_num_rows($query)) {
 }else{
 
   while($row = mssql_fetch_array($query)){
+    $phpdate = strtotime($row[11]);
+    $mysqldate = date( 'M d Y', $phpdate );
 
+    if ($row[9] == ""){
+      $row[9] = "Stage Not Available";
+    } elseif ($row[10] == ""){
+      $row[10] = "Not Available";
+    }
+    //str_replace("Malignant neoplasm", "CA - ", $row[10]);
     $rowArr = array(
       'PatientID'     => $row[0],
       'LastName'      => $row[1],
@@ -78,7 +86,7 @@ if(!mssql_num_rows($query)) {
       'SummaryStage'  => $row[8],
       'StageCriteria' => $row[9],
       'Diagnosis'     => $row[10],
-      'DiagDate'      => $row[11]
+      'DiagDate'      => $mysqldate
     );
     array_push($arr,$rowArr);
   }
@@ -86,11 +94,11 @@ if(!mssql_num_rows($query)) {
 }
   # JSON-encode the response
   //header('Content-Type: application/json');
-$encoded = str_replace("\"StageCriteria\":null", 
-  "\"StageCriteria\":\"Stage Not Available\"", json_encode(array('list'=>$arr)));
-$encoded = str_replace("Malignant neoplasm of", "CA - ", $encoded);
-echo str_replace("null","\"Not Available\"",$encoded);
-
+//$encoded = str_replace("\"StageCriteria\":null", 
+//  "\"StageCriteria\":\"Stage Not Available\"", json_encode(array('list'=>$arr)));
+//$encoded = str_replace("Malignant neoplasm of", "CA - ", $encoded);
+//echo str_replace("null","\"Not Available\"",$encoded);
+echo str_replace("Malignant neoplasm", "CA ",json_encode(array('list'=>$arr)));
 
 
 mssql_free_result($query);
