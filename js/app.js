@@ -103,7 +103,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     getPatientTreatmentinfo();
     getNewStart();
     chart();
-    $(".se-pre-con").fadeOut("slow");
+    $(".se-pre-con").fadeOut(1000);
   });
   
  
