@@ -1,5 +1,4 @@
 var app = angular.module('myApp', []);
-
 // Page controller
 app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
   // Grab the list of patients and categorize by doctor
@@ -54,26 +53,26 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
             if ( indexPat === -1){
               patientsInList.push($scope.data[j].PatientID);
               var diagnosisData = new Diagnosis($scope.data[j].Diagnosis,
-                                          $scope.data[j].TumorSize,
-                                          $scope.data[j].SummaryStage,
-                                          $scope.data[j].StageCriteria,
-                                          $scope.data[j].DiagDate);
+                $scope.data[j].TumorSize,
+                $scope.data[j].SummaryStage,
+                $scope.data[j].StageCriteria,
+                $scope.data[j].DiagDate);
               //console.log($scope.data[j].DiagDate);
               var patient = new Patient(  $scope.data[j].FirstName,
-                                        $scope.data[j].LastName,
-                                        $scope.data[j].PatientID);
-            
+                $scope.data[j].LastName,
+                $scope.data[j].PatientID);
+
               patient.diagnosis.push(diagnosisData);
               dataList[dataList.length-1].patients.push(patient);
             } else {
               var diagnosisData = new Diagnosis($scope.data[j].Diagnosis,
-                                          $scope.data[j].TumorSize,
-                                          $scope.data[j].SummaryStage,
-                                          $scope.data[j].StageCriteria,
-                                          $scope.data[j].DiagDate);
+                $scope.data[j].TumorSize,
+                $scope.data[j].SummaryStage,
+                $scope.data[j].StageCriteria,
+                $scope.data[j].DiagDate);
               dataList[dataList.length-1]
-                .patients[dataList[dataList.length-1].patients.length-1]
-                .diagnosis.push(diagnosisData);
+              .patients[dataList[dataList.length-1].patients.length-1]
+              .diagnosis.push(diagnosisData);
             }
           }
         }
@@ -104,7 +103,13 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     getPatientTreatmentinfo();
     getNewStart();
     chart();
+    $(".se-pre-con").fadeOut("slow");
   });
+  
+ 
+    // Animate loader off screen
+    
+
 
   // Grab the data for active patient when selecting frrom dropdown
   $scope.updateActivePatient = function(lookupID){
@@ -213,29 +218,29 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
   var checkDocs = function(data){
     function Document(fileType){
-        this.fileType = fileType;
-        this.creationDate = 0;
-        this.isAvailable = false;
-      }  
+      this.fileType = fileType;
+      this.creationDate = 0;
+      this.isAvailable = false;
+    }  
 
-      $scope.requiredDocuments = [new Document("RO-Consult"), new Document("Pathology"),
-                                  new Document("Rad Onc Requisition"), 
-                                  new Document("RO-CT Planning Sheet"),
-                                  new Document("Radiotherapy Prescription")];
-      var namesearch = ["consult", "pathology", "requisition", "planning sheet", "radiotherapy prescription"];
-      var x;
-      for (x in data){        
-        var name = data[x].DocType.toLowerCase();
-        var date = new Date(data[x].Date.substring(0,11));
-        var cutoffDate = new Date();
-        cutoffDate.setDate(cutoffDate.getDate()-180)
-        for (var i =0; i<namesearch.length; i++){
-          if(name.indexOf(namesearch[i]) != -1 && date > cutoffDate){
-            $scope.requiredDocuments[i].isAvailable = true;
-          }  
-        }
-        
+    $scope.requiredDocuments = [new Document("RO-Consult"), new Document("Pathology"),
+    new Document("Rad Onc Requisition"), 
+    new Document("RO-CT Planning Sheet"),
+    new Document("Radiotherapy Prescription")];
+    var namesearch = ["consult", "pathology", "requisition", "planning sheet", "radiotherapy prescription"];
+    var x;
+    for (x in data){        
+      var name = data[x].DocType.toLowerCase();
+      var date = new Date(data[x].Date.substring(0,11));
+      var cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate()-180)
+      for (var i =0; i<namesearch.length; i++){
+        if(name.indexOf(namesearch[i]) != -1 && date > cutoffDate){
+          $scope.requiredDocuments[i].isAvailable = true;
+        }  
       }
+
+    }
   }
 
   // Grab Patient specific treatment info
@@ -274,11 +279,8 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
   // High chart for displaying patient planning info
   var chart = function () {
-
-
-
-      $('#progress').highcharts({
-        chart: {
+    $('#progress').highcharts({
+      chart: {
           //backgroundColor: "#FFFFFF",
           plotBackgroundColor: null,
           plotBorderWidth: 0,
@@ -329,7 +331,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           ]
         }]
       });
-    }
+}
   /*  $scope.toggle = function() {
     $scope.review = !$scope.review;
   }*/
