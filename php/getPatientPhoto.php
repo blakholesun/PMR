@@ -37,14 +37,19 @@ $query = mssql_query($sql);
 
 
 if(!mssql_num_rows($query)) {
-  echo 'No records found.';
+  //echo 'No records found.';
 }else{
 	$row = mssql_fetch_array($query);
 }
 
-$img = base64_encode($row[1]);
+if ($row[1] == ''){
+	echo 'No records found.';
+} else{
+	$img = base64_encode($row[1]);
+	echo $img;
+}
 
-echo $img;
+
 
 mssql_free_result($query);
 

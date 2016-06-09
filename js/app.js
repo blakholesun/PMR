@@ -259,6 +259,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           i++;
         }
       }
+      console.log($scope.TreatmentInfo);
     });
   }
 
