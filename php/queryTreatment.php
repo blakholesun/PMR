@@ -135,7 +135,7 @@
         }
         $coursedict[$c_count][$p_count]["nofractions"] = $json[$index]["NoFractions"];
 
-        $coursedict[$c_count][$p_count]["date"] = $json[$index]["CreationDate"];
+        $coursedict[$c_count][$p_count]["date"] = date('M d Y', strtotime($json[$index]["CreationDate"]));
 
         $coursedict[$c_count][$p_count][$f_count]["name"] = $f_id;
 

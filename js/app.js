@@ -105,8 +105,8 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     chart();
     $(".se-pre-con").fadeOut(1000);
   });
-  
- 
+
+
     // Animate loader off screen
     
 
@@ -167,6 +167,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
     $scope.patientDiagnosis = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].diagnosis;
+    //switchTab();
   }
 
   // Moves to next patient and updates fields for current patient
@@ -188,7 +189,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
     $scope.patientDiagnosis = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].diagnosis;
-
+    //switchTab();
   }
 
   // Grabbing the patient document that is clicked on
@@ -204,7 +205,15 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $http.post( "php/downloadPDF.php", data).then( function (response) {
       PDFObject.embed(response.data, "#Doc", options);
     });
+
+    //switchTab();
   }
+
+
+  $("a[data-tab-destination]").on('click', function() {
+      var tab = $(this).attr('data-tab-destination');
+      $("#"+tab).click();
+  });
 
   //Filerting out the files that have distribution and imrt in name for documents list
   $scope.keepOnTop = function (x) {
@@ -249,17 +258,27 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
       $scope.TreatmentInfo = [];
       var TreatmentInfo = response.data;
+      console.log(TreatmentInfo);
       var i = 0;
-      for (item in TreatmentInfo['0']){
-        if (TreatmentInfo['0'][item].hasOwnProperty('dose')){
-          $scope.TreatmentInfo.push(new Object());
-          $scope.TreatmentInfo[i].Dose =  TreatmentInfo['0'][item].dose;
-          $scope.TreatmentInfo[i].noFractions = TreatmentInfo['0'][item].nofractions;
-          $scope.TreatmentInfo[i].Plan = TreatmentInfo['0'][item].name;
+      var cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate()-30);
+
+      for (item1 in TreatmentInfo){
+        for (item in TreatmentInfo[item1]){
+          planCreationDate = new Date(TreatmentInfo[item1][item].date);
+          if (TreatmentInfo[item1][item].hasOwnProperty('dose') 
+            && (TreatmentInfo[item1][item].cstatus === 'ACTIVE' 
+              || planCreationDate > cutoffDate)){
+
+            $scope.TreatmentInfo.push(new Object());
+          $scope.TreatmentInfo[i].Dose =  TreatmentInfo[item1][item].dose;
+          $scope.TreatmentInfo[i].noFractions = TreatmentInfo[item1][item].nofractions;
+          $scope.TreatmentInfo[i].Plan = TreatmentInfo[item1][item].name;
           i++;
         }
       }
-      console.log($scope.TreatmentInfo);
+    }
+      //console.log($scope.TreatmentInfo);
     });
   }
 

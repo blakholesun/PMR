@@ -56,10 +56,10 @@
               <a href="#" class="btn btn-success" ng-show="review">Reviewed</a> -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="" ng-click="previousPatient(); grabPatientInfo()" >
+              <li><a href="" data-tab-destination="overview-tab" ng-click="previousPatient(); grabPatientInfo();" >
                 <span class="glyphicon glyphicon-arrow-left"></span> Previous Patient </a>
               </li>
-              <li><a href="" ng-click="nextPatient(); grabPatientInfo()"> Next Patient 
+              <li><a href="" data-tab-destination="overview-tab" ng-click="nextPatient(); grabPatientInfo();"> Next Patient 
                 <span class="glyphicon glyphicon-arrow-right"></span></a>
               </li>
             </ul>
@@ -154,8 +154,7 @@
             <div id="collapse1" class="panel-collapse collapse in">
               <ul class="list-group">
                 <li class="list-group-item" ng-repeat="x in documents | orderBy:keepOnTop | filter:docu">
-                  <a href="#docpane" ng-click="displayDocument(x.FileName)" ng-class="
-                  (x.ApprovalStatus == 'Approved' || x.Signed == 'Signed') ? 'text-success' : 'text-danger'"><strong>{{x.DocType}}</strong></a>
+                  <a href="" data-tab-destination="doc-tab" ng-click="displayDocument(x.FileName);" ng-class="(x.ApprovalStatus == 'Approved' || x.Signed == 'Signed') ? 'text-success' : 'text-danger'"><strong>{{x.DocType}}</strong></a>
                   <p><small>{{x.Date | date:'short'}} <!-- {{x.ApprovalStatus}} --></small></p>
                 </li>
               </ul>
@@ -180,10 +179,10 @@
           <div id="Documents" >
             <div class="row content">
               <ul class="nav nav-tabs">
-                <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">
+                <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab" aria-expanded="true">
                   Overview</a>
                 </li>
-                <li class=""><a href="#docpane" data-toggle="tab" aria-expanded="false">
+                <li class=""><a href="#docpane" id="doc-tab" data-toggle="tab" aria-expanded="false">
                   Documents</a>
                 </li>
               </ul> <br>
@@ -228,7 +227,8 @@
                       <div class="panel panel-default">
                         <div class="panel-heading"><strong>Required Documents</strong></div>
                         <ul class="list-group">
-                          <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-deafult' : 'list-group-item list-group-item-danger')">{{x.fileType}}
+                          <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')">{{x.fileType}}
+                            <img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable">
                           </li>
                         </ul>
                       </div>
