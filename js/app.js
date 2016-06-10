@@ -313,7 +313,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           //y: 40
         },
         tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
         },
         plotOptions: {
           pie: {
@@ -336,18 +336,11 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           name: 'Planning Time',
           innerSize: '50%',
           data: [
-          ['Firefox',   10.38],
-          ['IE',       56.33],
-          ['Chrome', 24.03],
-          ['Safari',    4.77],
-          ['Opera',     0.91],
-          {
-            name: 'Proprietary or Undetectable',
-            y: 0.2,
-            dataLabels: {
-              enabled: false
-            }
-          }
+          ['1) Consult-CT',        20],
+          ['2) CT-Contour',        20],
+          ['3) Contour-DoseCalc',  20],
+          ['4) DoseCalc-Show',     20],
+          ['5) Show-Treatment',    20],
           ]
         }]
       });

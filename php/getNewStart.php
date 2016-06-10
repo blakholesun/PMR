@@ -32,7 +32,7 @@ AND ActivityInstance.ActivitySer = Activity.ActivitySer
 AND Patient.PatientSer 				= ScheduledActivity.PatientSer         
 AND Patient.PatientId				= '$patientID'
 AND ScheduledActivity.ObjectStatus 		!= 'Deleted' 
-AND Activity.ActivityCode LIKE '%New Start%'
+AND (Activity.ActivityCode LIKE '%New Start%' OR Activity.ActivityCode LIKE '%One Rx%')
 
 ORDER BY CreationDate DESC
 ";
@@ -41,11 +41,11 @@ $query = mssql_query($sql);
 
 
 if(!mssql_num_rows($query)) {
-  $mysqldate = 'Unavailable';;
+  $mysqldate = 'Unavailable';
 }else{
 	$row = mssql_fetch_array($query);
 	$phpdate = strtotime($row[1]);
-	$mysqldate = date( 'M d Y H:i', $phpdate );
+	$mysqldate = date( 'M d Y', $phpdate );
 }
 
 echo json_encode(array('startDate'=>$mysqldate));
