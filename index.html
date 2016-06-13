@@ -229,6 +229,7 @@
                         <ul class="list-group">
                           <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')">{{x.fileType}}
                             <img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable">
+                            <img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable">
                           </li>
                         </ul>
                       </div>

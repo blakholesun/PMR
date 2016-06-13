@@ -299,7 +299,29 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
   // High chart for displaying patient planning info
   var chart = function () {
-    $('#progress').highcharts({
+    $http.post("php/getPlanningTimes.php", {patientID: $scope.patientID})
+    .then( function (response) {
+      $scope.planTimes = response.data;
+      console.log($scope.planTimes);
+      if ($scope.planTimes === "Sequence does not exit. Cannot build chart."){
+        //Do something here
+        $('#progress').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'No correct sequence to chart'
+        },
+        series: [{
+            type: 'pie',
+            name: 'Random data',
+            data: []
+        }]
+        });
+      }else{
+      $('#progress').highcharts({
       chart: {
           //backgroundColor: "#FFFFFF",
           plotBackgroundColor: null,
@@ -313,7 +335,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           //y: 40
         },
         tooltip: {
-          pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+          pointFormat: '{series.name}: <b>{point.y:.1f} days</b>'
         },
         plotOptions: {
           pie: {
@@ -336,14 +358,16 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           name: 'Planning Time',
           innerSize: '50%',
           data: [
-          ['1) Consult-CT',        20],
-          ['2) CT-Contour',        20],
-          ['3) Contour-DoseCalc',  20],
-          ['4) DoseCalc-Show',     20],
-          ['5) Show-Treatment',    20],
+          //['1) Consult-CT',        $scope.planTimes[4]],
+          ['2) CT-Contour',        $scope.planTimes.planTimes[2]],
+          ['3) Contour-DoseCalc',  $scope.planTimes.planTimes[1]],
+          //['4) DoseCalc-Show',     $scope.planTimes.planTimes[1]],
+          ['5) Dose-Treatment',    $scope.planTimes.planTimes[0]],
           ]
         }]
       });
+      }
+    });
 }
   /*  $scope.toggle = function() {
     $scope.review = !$scope.review;
