@@ -299,12 +299,12 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
   // High chart for displaying patient planning info
   var chart = function () {
-    $http.post("php/getPlanningTimes.php", {patientID: $scope.patientID})
+    $http.post("php/getPlanningTimes2.php", {patientID: $scope.patientID})
     .then( function (response) {
       $scope.planTimes = response.data;
       console.log($scope.planTimes);
-      if ($scope.planTimes === "Sequence does not exit. Cannot build chart."){
-        //Do something here
+      if (typeof $scope.planTimes === "string"){
+        //Dummy Chart
         $('#progress').highcharts({
         chart: {
             plotBackgroundColor: null,
@@ -358,10 +358,10 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           name: 'Planning Time',
           innerSize: '50%',
           data: [
-          //['1) Consult-CT',        $scope.planTimes[4]],
+          ['1) Consult-CT',        $scope.planTimes.planTimes[3]],
           ['2) CT-Contour',        $scope.planTimes.planTimes[2]],
-          ['3) Contour-DoseCalc',  $scope.planTimes.planTimes[1]],
-          //['4) DoseCalc-Show',     $scope.planTimes.planTimes[1]],
+          //['3) Contour-DoseCalc',  $scope.planTimes.planTimes[2]],
+          ['4) DoseCalc-Show',     $scope.planTimes.planTimes[1]],
           ['5) Dose-Treatment',    $scope.planTimes.planTimes[0]],
           ]
         }]
