@@ -189,7 +189,6 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
     $scope.patientDiagnosis = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].diagnosis;
-    //switchTab();
   }
 
   // Grabbing the patient document that is clicked on
@@ -205,14 +204,12 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $http.post( "php/downloadPDF.php", data).then( function (response) {
       PDFObject.embed(response.data, "#Doc", options);
     });
-
-    //switchTab();
   }
 
-
+  // allows automatic transfer to overview tab
   $("a[data-tab-destination]").on('click', function() {
-      var tab = $(this).attr('data-tab-destination');
-      $("#"+tab).click();
+    var tab = $(this).attr('data-tab-destination');
+    $("#"+tab).click();
   });
 
   //Filerting out the files that have distribution and imrt in name for documents list
@@ -236,13 +233,14 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     new Document("Rad Onc Requisition"), 
     new Document("RO-CT Planning Sheet"),
     new Document("Radiotherapy Prescription")];
-    var namesearch = ["consult", "pathology", "requisition", "planning sheet", "radiotherapy prescription"];
+    var namesearch = ["consult", "pathology", "requisition", "planning sheet", "prescription"];
     var x;
     for (x in data){        
       var name = data[x].DocType.toLowerCase();
       var date = new Date(data[x].Date.substring(0,11));
       var cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate()-180)
+      // Change this value for cutoff date
+      cutoffDate.setDate(cutoffDate.getDate()-360)
       for (var i =0; i<namesearch.length; i++){
         if(name.indexOf(namesearch[i]) != -1 && date > cutoffDate){
           $scope.requiredDocuments[i].isAvailable = true;
@@ -258,7 +256,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
       $scope.TreatmentInfo = [];
       var TreatmentInfo = response.data;
-      console.log(TreatmentInfo);
+      //console.log(TreatmentInfo);
       var i = 0;
       var cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate()-30);
@@ -301,81 +299,76 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
   var chart = function () {
     $http.post("php/getPlanningTimes2.php", {patientID: $scope.patientID})
     .then( function (response) {
+
       $scope.planTimes = response.data;
-      console.log($scope.planTimes);
+      //console.log($scope.planTimes);
+
+
       if (typeof $scope.planTimes === "string"){
         //Dummy Chart
         $('#progress').highcharts({
-        chart: {
+          chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false
-        },
-        title: {
+          },
+          title: {
             text: 'No correct sequence to chart'
-        },
-        series: [{
+          },
+          series: [{
             type: 'pie',
             name: 'Random data',
             data: []
-        }]
+          }]
         });
       }else{
-      $('#progress').highcharts({
-      chart: {
-          //backgroundColor: "#FFFFFF",
-          plotBackgroundColor: null,
-          plotBorderWidth: 0,
-          plotShadow: true
-        },
-        title: {
-          text: 'Planning<br>times',
-          align: 'center',
-          verticalAlign: 'middle',
-          //y: 40
-        },
-        tooltip: {
-          pointFormat: '{series.name}: <b>{point.y:.1f} days</b>'
-        },
-        plotOptions: {
-          pie: {
-            dataLabels: {
-              enabled: true,
-              distance: -50,
-              style: {
-                fontWeight: 'bold',
-                color: 'white',
-                textShadow: '0px 1px 2px black'
-              }
+        $('#progress').highcharts({
+          chart: {
+            style: {
+              fontSize: '18px'
             },
-            startAngle: 0,
-            endAngle: 360,
-            //center: ['50%', '75%']
-          }
-        },
-        series: [{
-          type: 'pie',
-          name: 'Planning Time',
-          innerSize: '50%',
-          data: [
-          ['1) Consult-CT',        $scope.planTimes.planTimes[3]],
-          ['2) CT-Contour',        $scope.planTimes.planTimes[2]],
-          //['3) Contour-DoseCalc',  $scope.planTimes.planTimes[2]],
-          ['4) DoseCalc-Show',     $scope.planTimes.planTimes[1]],
-          ['5) Dose-Treatment',    $scope.planTimes.planTimes[0]],
-          ]
-        }]
-      });
+            type: 'column'
+          },
+          title: {
+            text: 'Patient Planning Times',
+          },
+          xAxis: {
+            type: 'category'
+          },
+          yAxis: {
+            title:{
+              text:'Time [days]'
+            }
+          },
+          legend: {
+            enabled: false
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.y:.1f} days</b>'
+          },
+          plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f} days'
+                }
+            }
+          },
+          series: [{
+            name: 'Planning Time',
+            colorByPoint: true,
+            //innerSize: '50%',
+            data: [
+              ['1) Consult-CT', $scope.planTimes.planTimes[3]],
+              ['2) CT-Contour', $scope.planTimes.planTimes[2]],
+              ['4) DoseCalc-Show', $scope.planTimes.planTimes[1]],
+              ['5) Dose-Treatment', $scope.planTimes.planTimes[0]],
+            ]
+          }]
+        });
       }
     });
-}
-  /*  $scope.toggle = function() {
-    $scope.review = !$scope.review;
-  }*/
+  }
 
-/*  $scope.patientCompletionIncrement = function() {
-    $scope.patientCompletionCount++;
-    // Set completion in object to true
-    $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex] = true;
-  }*/
 });

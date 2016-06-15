@@ -86,8 +86,17 @@ if(!mssql_num_rows($query)) {
   // set tokens in planTime
   $planTime->setTokens($tokens);
 
+  // set filetr for daseclac
+  $events = array("READY FOR ELECTRON PLANNING", "READY FOR IMRT PLANNING",
+   "READY FOR STEREOTACTIC PLANNING", "READY FOR TBI CALCULATION");
+
   //add all query results to the planTime class
 	while($row = mssql_fetch_array($query)){
+    // Map 
+    if (in_array($row[1], $events)){
+      $row[1] = "READY FOR DOSE CALCULATION";
+    }
+
     $rowArray = array(
     'PatientId'         => $row[0],
     'ActivityCode'		  => $row[1],

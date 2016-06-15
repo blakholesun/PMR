@@ -5,7 +5,7 @@ class PlanningTimes{
 	private $planTimes;
 	private $eventTokens;
 	private $originalSequence;
-	const NUMBER_OF_DAYS_CUTOFF = 180;
+	//const NUMBER_OF_DAYS_CUTOFF = 180;
 /*	private $isValid = false;*/
 	
 	public function __construct(){
@@ -14,18 +14,6 @@ class PlanningTimes{
 		$this->eventTokens = array();
 		$this->originalSequence = array();
 	}
-	
-	/*public function __construct($eventTokens){
-		if (is_array($eventTokens)){
-			$this->eventTokens = $eventTokens;
-			$this->planTimes = array_fill(0,count($eventTokens)-1,0);
-			$this->sequence = array_fill(0,count($eventTokens),0);
-			$this->originalSequence = $this->sequence;
-		} else {
-			trigger_error("Input is not an array. Did not set sequence.", 
-				E_USER_ERROR);
-		}
-	}*/
 	
 	function __destruct(){}
 
@@ -62,9 +50,6 @@ class PlanningTimes{
 		return array_shift($this->sequence);
 	}
 	
-/*	private function setValid(){
-		$this->isValid = true;
-	}*/
 
 	// Function that scnas intial array and finds sequence
 	// Throws false on failure

@@ -5,7 +5,7 @@ include('/usr/lib/cgi-bin/dev/robert/includes/config.php');
 $link = mssql_connect(ARIA_DB, ARIA_USERNAME, ARIA_PASSWORD);
 
 if (!$link) {
-  die('Something went wrong while connecting to MSSQL');
+	die('Something went wrong while connecting to MSSQL');
 }
 
 //$patientID = $_POST["patientID"];
@@ -48,8 +48,6 @@ if ($row[1] == ''){
 	$img = base64_encode($row[1]);
 	echo $img;
 }
-
-
 
 mssql_free_result($query);
 
