@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp" >
 <head>
   <title>Patient Management</title>
   <meta charset="utf-8">
@@ -19,11 +19,12 @@
 </head>
 
 <!-- NAVBAR -->
-<body data-target=".navbar" data-offset="50" ng-app="myApp" >
- <div class="se-pre-con">
+<body>
+
+ <div ng-controller="pageController" >
+   <div class="se-pre-con">
   <h2 id="middle">Grabbing Patient Data!</h2>
  </div>
- <div ng-controller="pageController" >
   <nav id="nav" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -256,10 +257,5 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript">
-    /*$("nav").autoHidingNavbar({
-      //showOnBottom: false
-    });*/
-</script>
 </body>
 </html>

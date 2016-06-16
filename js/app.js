@@ -106,11 +106,6 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $(".se-pre-con").fadeOut(1000);
   });
 
-
-    // Animate loader off screen
-    
-
-
   // Grab the data for active patient when selecting frrom dropdown
   $scope.updateActivePatient = function(lookupID){
     var storedID, found = false;
