@@ -106,11 +106,14 @@ if(!mssql_num_rows($query)) {
 
   //use planTime built in method to get the right sequence
   //throws false on failure
-  if ($planTime->generateSequence()){
-    $planTime->generatePlanTime();
-    echo json_encode(array('planTimes'=>$planTime->getPlanTimes()));
+  $isSuccess = $planTime->generateSequence();
+  $isValidTimes = $planTime->generatePlanTime();
+
+  if ( $isSuccess && $isValidTimes){ 
+    echo json_encode(array( 'planTimes'=>$planTime->getPlanTimes(),
+                            'sequence'=>$planTime->getSequence()));
   } else {
-    echo "Sequence does not exit. Cannot build chart.";
+    echo json_encode(array( 'sequence'=>$planTime->getSequence()));
   }
 }
 

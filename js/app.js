@@ -1,4 +1,5 @@
 var app = angular.module('myApp', []);
+
 // Page controller
 app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
   // Grab the list of patients and categorize by doctor
@@ -104,6 +105,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     getNewStart();
     chart();
     $(".se-pre-con").fadeOut(1000);
+    $('#question').popover({ html : true});
   });
 
   // Grab the data for active patient when selecting frrom dropdown
@@ -138,10 +140,13 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       checkDocs(response.data);
     });
     //console.log($scope.dataList);
-    repopulateDoc();
     getPatientTreatmentinfo();
     getNewStart();
     chart();
+    $("#overview-tab").click();
+    $timeout(function() {
+        repopulateDoc();
+    }, 2000); 
   }
 
   // Moves to next patient and updates fields for current patient
@@ -162,7 +167,6 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     }
     $scope.patientID = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].ID;
     $scope.patientDiagnosis = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].diagnosis;
-    //switchTab();
   }
 
   // Moves to next patient and updates fields for current patient
@@ -199,13 +203,8 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     $http.post( "php/downloadPDF.php", data).then( function (response) {
       PDFObject.embed(response.data, "#Doc", options);
     });
+    $("#doc-tab").click();
   }
-
-  // allows automatic transfer to overview tab
-  $("a[data-tab-destination]").on('click', function() {
-    var tab = $(this).attr('data-tab-destination');
-    $("#"+tab).click();
-  });
 
   //Filerting out the files that have distribution and imrt in name for documents list
   $scope.keepOnTop = function (x) {
@@ -251,17 +250,18 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
       $scope.TreatmentInfo = [];
       var TreatmentInfo = response.data;
-      //console.log(TreatmentInfo);
+      console.log(TreatmentInfo);
       var i = 0;
-      var cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate()-30);
+      //var cutoffDate = new Date();
+      //cutoffDate.setDate(cutoffDate.getDate()-30);
 
       for (item1 in TreatmentInfo){
         for (item in TreatmentInfo[item1]){
           planCreationDate = new Date(TreatmentInfo[item1][item].date);
           if (TreatmentInfo[item1][item].hasOwnProperty('dose') 
             && (TreatmentInfo[item1][item].cstatus === 'ACTIVE' 
-              || planCreationDate > cutoffDate)){
+              /*|| planCreationDate > cutoffDate*/)
+            && TreatmentInfo[item1][item].intent !== 'VERIFICATION'){
 
             $scope.TreatmentInfo.push(new Object());
           $scope.TreatmentInfo[i].Dose =  TreatmentInfo[item1][item].dose;
@@ -280,6 +280,10 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
       $scope.NewStart = response.data.startDate;
     });
+    $http.post("php/getSGAS.php", {patientID: $scope.patientID})
+    .then( function (response) {
+      $scope.SGAS = response.data.DueDate;
+    });
   }
 
   // insert placeholder in the Documents tab
@@ -296,10 +300,10 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     .then( function (response) {
 
       $scope.planTimes = response.data;
-      //console.log($scope.planTimes);
+      console.log($scope.planTimes.sequence);
 
 
-      if (typeof $scope.planTimes === "string"){
+      if (!$scope.planTimes.hasOwnProperty('planTimes')){
         //Dummy Chart
         $('#progress').highcharts({
           chart: {
@@ -308,7 +312,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
             plotShadow: false
           },
           title: {
-            text: 'No correct sequence to chart'
+            text: $scope.planTimes.sequence
           },
           series: [{
             type: 'pie',
@@ -328,7 +332,12 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
             text: 'Patient Planning Times',
           },
           xAxis: {
-            type: 'category'
+            type: 'category',
+            labels: {
+              style: {
+                fontSize : '18px'  
+              }
+            }
           },
           yAxis: {
             title:{
@@ -355,10 +364,10 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
             colorByPoint: true,
             //innerSize: '50%',
             data: [
-              ['1) Consult-CT', $scope.planTimes.planTimes[3]],
-              ['2) CT-Contour', $scope.planTimes.planTimes[2]],
-              ['4) DoseCalc-Show', $scope.planTimes.planTimes[1]],
-              ['5) Dose-Treatment', $scope.planTimes.planTimes[0]],
+              ['1) Consult-CTSim', $scope.planTimes.planTimes[3]],
+              ['2) CTSim-MD Contour', $scope.planTimes.planTimes[2]],
+              ['3) MD Contour-Dose Calculation', $scope.planTimes.planTimes[1]],
+              ['4) Dose Calculation-Treatment', $scope.planTimes.planTimes[0]],
             ]
           }]
         });

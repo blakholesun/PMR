@@ -14,7 +14,6 @@
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
   <script src="bower_components/bootstrap-autohidingnavbar/src/jquery.bootstrap-autohidingnavbar.js
   "></script>
-  <script src="bower_components/progressbar.js/dist/progressbar.min.js"></script>
   <script src="js/app.js"></script>
 </head>
 
@@ -23,8 +22,8 @@
 
  <div ng-controller="pageController" >
    <div class="se-pre-con">
-  <h2 id="middle">Grabbing Patient Data!</h2>
- </div>
+    <h2 id="middle">Grabbing Patient Data!</h2>
+  </div>
   <nav id="nav" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -53,30 +52,19 @@
             </li>
           </ul>
           <ul id="center" class = "nav navbar-nav">
-              <!-- <a href="#" class="btn btn-primary" ng-show="!review" ng-click="toggle(); patientCompletionIncrement()">Review!</a>
-              <a href="#" class="btn btn-success" ng-show="review">Reviewed</a> -->
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="" data-tab-destination="overview-tab" ng-click="previousPatient(); grabPatientInfo();" >
-                <span class="glyphicon glyphicon-arrow-left"></span> Previous Patient </a>
-              </li>
-              <li><a href="" data-tab-destination="overview-tab" ng-click="nextPatient(); grabPatientInfo();"> Next Patient 
-                <span class="glyphicon glyphicon-arrow-right"></span></a>
-              </li>
-            </ul>
-          </div>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="" data-tab-destination="overview-tab" ng-click="previousPatient(); grabPatientInfo();" >
+              <span class="glyphicon glyphicon-arrow-left"></span> Previous Patient </a>
+            </li>
+            <li><a href="" data-tab-destination="overview-tab" ng-click="nextPatient(); grabPatientInfo();"> Next Patient 
+              <span class="glyphicon glyphicon-arrow-right"></span></a>
+            </li>
+          </ul>
         </div>
-        <!-- <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{patientCompletionCount/data.length}}"
-          aria-valuemin="0" aria-valuemax="{{data.length}}" style="width:{{patientCompletionCount/data.length}}">
-        </div>
-      </div> -->
+      </div>
     </div>
   </nav>    
-  <!-- WELCOME MESSAGE -->
-  <!-- <div class="jumbotron">
-    <h1>Welcome to Patient Management</h1>      
-  </div> -->
 
   <!-- ANALYTICA MIGHT REMOVE -->
   <div id="section1" class="panel-group">
@@ -142,7 +130,9 @@
           <div class="panel panel-primary">
             <div class="panel-heading">
               <H2 class="panel-title">
-                <a data-toggle="collapse" href="#collapse1">Documents</a> <br>
+                <a data-toggle="collapse" href="#collapse1">Documents</a>
+                <div id="question" class="glyphicon glyphicon-question-sign" data-container="body" data-toggle="popover" data-placement="auto" data-content='Green documents are signed or approved. Red documents are unsigned and unapproved.' data-original-title="" title=""></div>
+                <br>
                 <form>
                   <div class="form-group">
                     <div class="input-group">
@@ -155,7 +145,7 @@
             <div id="collapse1" class="panel-collapse collapse in">
               <ul class="list-group">
                 <li class="list-group-item" ng-repeat="x in documents | orderBy:keepOnTop | filter:docu">
-                  <a href="" data-tab-destination="doc-tab" ng-click="displayDocument(x.FileName);" ng-class="(x.ApprovalStatus == 'Approved' || x.Signed == 'Signed') ? 'text-success' : 'text-danger'"><strong>{{x.DocType}}</strong></a>
+                  <a href="" ng-click="displayDocument(x.FileName)" ng-class="(x.ApprovalStatus == 'Approved' || x.Signed == 'Signed') ? 'text-success' : 'text-danger'"><strong>{{x.DocType}}</strong></a>
                   <p><small>{{x.Date | date:'short'}} <!-- {{x.ApprovalStatus}} --></small></p>
                 </li>
               </ul>
@@ -165,17 +155,11 @@
       </div>
 
       <div class="col-sm-10">
-       <!--  <div> -->
-          <!-- <ul class="pager">
-            <li class="previous"><a href="" ng-click="previousPatient(); grabPatientInfo()">&larr; Previous</a></li>
-            <li id="patientname"> -->
-              <h2 style="margin: 0;"><center>{{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
-                {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
-                ({{patientID}})</center></h2>
-            <!-- </li>
-            <li class="next"><a href="" ng-click="nextPatient(); grabPatientInfo()">Next &rarr;</a></li>
-          </ul> -->
-          <!--  </div> -->
+
+        <h2 style="margin: 0;"><center>{{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+          {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+          ({{patientID}})</center></h2>
+
 
           <div id="Documents" >
             <div class="row content">
@@ -195,23 +179,37 @@
                       <div class="panel panel-default">
                         <div class="panel-heading"><strong>General</strong></div>
                         <ul class="list-group">
-                          <li ng-class="(NewStart != 'Unavailable' ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')">New Start: {{NewStart}}</li>
-                          <li class="list-group-item">Doctor: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}</li>
+                          <li ng-class="(NewStart != 'Unavailable' ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')"><strong>New Start</strong>: {{NewStart}}</li>
+                          <li class="list-group-item"><strong>SGAS Due</strong>: {{SGAS}}</li>
+                          <li class="list-group-item"><strong>Doctor</strong>: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}</li>
                         </ul>
                       </div>
                     </div>
                     <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Required Documents</strong></div>
+                        <ul class="list-group">
+                          <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')"><div style="display:inline;">{{x.fileType}}</div>
+                            <div style="display:inline; float:right"><img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable"></div>
+                            <div style="display:inline; float:right"><img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable"></div>
+                          </li>
+                        </ul>
+                      </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="panel-group">
+                      <div class="panel panel-default">
                       <div class="panel-heading"><strong>Diagnosis</strong></div>
                       <ul class="list-group">
                         <li class="list-group-item">
                           <span ng-repeat-start="x in patientDiagnosis" class="text-primary">
                             [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
                           </span>
-                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px">Staging: {{x.stageCriteria}}</p>
-                          <span ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small>Diagnosis Date: {{x.dateStamp}}</small><br></span>
+                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
+                          <span ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></span>
                         </li>
                       </ul>
                     </div>
+                    <br>
                     <div class="panel-group">
                       <div class="panel panel-default">
                         <div class="panel-heading"><strong>Prescription</strong></div>
@@ -222,18 +220,7 @@
                         </ul>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="panel-group">
-                      <div class="panel panel-default">
-                        <div class="panel-heading"><strong>Required Documents</strong></div>
-                        <ul class="list-group">
-                          <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')">{{x.fileType}}
-                            <img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable">
-                            <img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable">
-                          </li>
-                        </ul>
-                      </div>
+                      
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -245,6 +232,7 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="tab-pane fade" id="docpane">
                   <div id="Doc">
                     <h2>Select a document!</h2>
@@ -257,5 +245,10 @@
       </div>
     </div>
   </div>
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover(); 
+    });
+  </script>
 </body>
 </html>

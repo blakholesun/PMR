@@ -1,11 +1,13 @@
 <?php
-
+/*
+* Class to easily mainpulate plan times
+*/
 class PlanningTimes{
 	private $sequence;
 	private $planTimes;
 	private $eventTokens;
 	private $originalSequence;
-	//const NUMBER_OF_DAYS_CUTOFF = 180;
+	const NUMBER_OF_DAYS_CUTOFF = 180;
 /*	private $isValid = false;*/
 	
 	public function __construct(){
@@ -74,9 +76,9 @@ class PlanningTimes{
 			}
 		}
 
-		//Ensure that all sevents were found. If not set array to empty
+		//Ensure that all events were found. If not retrn false
 		if (count($this->sequence) !== count($this->eventTokens)){
-			$this->sequence = array();
+			//$this->sequence = array();
 			return false;
 		} else{
 			return true;
@@ -115,12 +117,13 @@ class PlanningTimes{
 			}
 			array_push($this->planTimes, $days);
 		}
-
-		/*if (max($this->planTimes) < NUMBER_OF_DAYS_CUTOFF){
+		//echo max($this->planTimes) < $NUMBER_OF_DAYS_CUTOFF;
+		if (max($this->planTimes) < self::NUMBER_OF_DAYS_CUTOFF){
 			return true;
 		} else {
+			//echo max($this->planTimes);
 			return false;
-		}*/
+		}
 	}
 	
 }
