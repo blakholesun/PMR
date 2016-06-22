@@ -105,6 +105,9 @@
     font-weight: bold;
   }
 
+  .panel-heading{
+    font-size: 125%;
+  }
 
   .img-responsive {
     width: 50%;

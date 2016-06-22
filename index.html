@@ -11,6 +11,10 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/highcharts/highcharts.js"></script>
+  <script src="bower_components/highcharts/highcharts-more.js"></script>
+  <script src="bower_components/highcharts/modules/drilldown.js"></script>
+  <script src="bower_components/highcharts/modules/data.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
   <script src="bower_components/bootstrap-autohidingnavbar/src/jquery.bootstrap-autohidingnavbar.js
   "></script>
@@ -186,40 +190,40 @@
                       </div>
                     </div>
                     <div class="panel panel-default">
-                        <div class="panel-heading"><strong>Required Documents</strong></div>
-                        <ul class="list-group">
-                          <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')"><div style="display:inline;">{{x.fileType}}</div>
-                            <div style="display:inline; float:right"><img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable"></div>
-                            <div style="display:inline; float:right"><img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable"></div>
-                          </li>
-                        </ul>
-                      </div>
+                      <div class="panel-heading"><strong>Required Documents</strong></div>
+                      <ul class="list-group">
+                        <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')"><div style="display:inline;">{{x.fileType}}</div>
+                          <div style="display:inline; float:right"><img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable"></div>
+                          <div style="display:inline; float:right"><img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable"></div>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                   <div class="col-sm-3">
                     <div class="panel-group">
                       <div class="panel panel-default">
-                      <div class="panel-heading"><strong>Diagnosis</strong></div>
-                      <ul class="list-group">
-                        <li class="list-group-item">
-                          <span ng-repeat-start="x in patientDiagnosis" class="text-primary">
-                            [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
-                          </span>
-                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
-                          <span ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></span>
-                        </li>
-                      </ul>
-                    </div>
-                    <br>
-                    <div class="panel-group">
-                      <div class="panel panel-default">
-                        <div class="panel-heading"><strong>Prescription</strong></div>
+                        <div class="panel-heading"><strong>Diagnosis</strong></div>
                         <ul class="list-group">
-                          <li class="list-group-item" ng-repeat="x in TreatmentInfo">
-                            {{x.Plan}}: <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong>
+                          <li class="list-group-item">
+                            <span ng-repeat-start="x in patientDiagnosis" class="text-primary">
+                              [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
+                            </span>
+                            <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
+                            <p ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></p>
                           </li>
                         </ul>
                       </div>
-                    </div>
+                      <br>
+                      <div class="panel-group">
+                        <div class="panel panel-default">
+                          <div class="panel-heading"><strong>Prescription</strong></div>
+                          <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="x in TreatmentInfo">
+                              {{x.Plan}}: <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                       
                     </div>
                   </div>
@@ -246,9 +250,9 @@
     </div>
   </div>
   <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover(); 
-    });
+  $(document).ready(function(){
+    $('[data-toggle="popover"]').popover(); 
+  });
   </script>
 </body>
 </html>

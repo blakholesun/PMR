@@ -69,7 +69,11 @@ class PlanningTimes{
 				$creationDate->setTimestamp($timestamp);
 				if (strpos(strtolower($oSequence[$row]['ActivityCode']), $eTokens[$token]) !== false 
 					&& $creationDate < $cutoffDate) {
-						array_push($this->sequence, $oSequence[$row]);
+						$tempSeq = $oSequence[$row];
+            			//Format for Javascript Dates';
+            			$tempSeq['JSDate'] = $creationDate->format('Y-m-d H:i:s');
+            			//print_r($tempSeq);
+            			$this->sequence[] =  $tempSeq;
 						$cutoffDate->setTimestamp($creationDate->getTimestamp());
 						break;
 				}
@@ -115,7 +119,7 @@ class PlanningTimes{
 					$days--;
 				}
 			}
-			array_push($this->planTimes, $days);
+			$this->planTimes[] = $days;
 		}
 		//echo max($this->planTimes) < $NUMBER_OF_DAYS_CUTOFF;
 		if (max($this->planTimes) < self::NUMBER_OF_DAYS_CUTOFF){

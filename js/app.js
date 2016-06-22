@@ -104,6 +104,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     getPatientTreatmentinfo();
     getNewStart();
     chart();
+    console.log(dataList);
     $(".se-pre-con").fadeOut(1000);
     $('#question').popover({ html : true});
   });
@@ -252,15 +253,15 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
       var TreatmentInfo = response.data;
       console.log(TreatmentInfo);
       var i = 0;
-      //var cutoffDate = new Date();
-      //cutoffDate.setDate(cutoffDate.getDate()-30);
+      var cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate()-30);
 
       for (item1 in TreatmentInfo){
         for (item in TreatmentInfo[item1]){
           planCreationDate = new Date(TreatmentInfo[item1][item].date);
           if (TreatmentInfo[item1][item].hasOwnProperty('dose') 
             && (TreatmentInfo[item1][item].cstatus === 'ACTIVE' 
-              /*|| planCreationDate > cutoffDate*/)
+              || planCreationDate > cutoffDate)
             && TreatmentInfo[item1][item].intent !== 'VERIFICATION'){
 
             $scope.TreatmentInfo.push(new Object());
@@ -286,7 +287,7 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
     });
   }
 
-  // insert placeholder in the Documents tab
+  // insert placeholder in the Documents tab when switching from
   var repopulateDoc = function() {
     var element = document.getElementById("docpane");
     var original = document.getElementById("Doc");
@@ -301,8 +302,6 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
 
       $scope.planTimes = response.data;
       console.log($scope.planTimes.sequence);
-
-
       if (!$scope.planTimes.hasOwnProperty('planTimes')){
         //Dummy Chart
         $('#progress').highcharts({
@@ -313,64 +312,115 @@ app.controller('pageController', function($http,$scope,$timeout,$filter,$sce){
           },
           title: {
             text: $scope.planTimes.sequence
-          },
-          series: [{
-            type: 'pie',
-            name: 'Random data',
-            data: []
-          }]
+          }
         });
       }else{
         $('#progress').highcharts({
-          chart: {
+
+        chart: {
             style: {
-              fontSize: '18px'
+              fontSize: '18px',
+              color: "#000"
             },
-            type: 'column'
-          },
-          title: {
-            text: 'Patient Planning Times',
-          },
-          xAxis: {
-            type: 'category',
+            type: 'columnrange',
+            zoomType: 'y',
+            inverted: true
+        },
+
+        title: {
+            text: 'Plan Times by Step'
+        },
+
+        xAxis: {
             labels: {
               style: {
-                fontSize : '18px'  
+                fontSize : '15px',
+                color:'#000' 
               }
-            }
+            },
+            categories: [
+              'Consult-<br>CTsim',
+              'CTsim-<br>MDContour',
+              'MDContour-<br>DoseCalc', 
+              'DoseCalc-<br>ReadyTreat']
+        },
+
+        yAxis: {
+            labels: {
+              style: {
+                fontSize : '15px',
+                color:'#000'
+              }
+            },
+            title: {
+                text: 'Date'
+            },
+            type: 'datetime'
+        },
+
+        tooltip: {
+          positioner: function () {
+              return { x: 150, y: 200 };
           },
-          yAxis: {
-            title:{
-              text:'Time [days]'
-            }
-          },
-          legend: {
-            enabled: false
-          },
-          tooltip: {
-            pointFormat: '{series.name}: <b>{point.y:.1f} days</b>'
-          },
-          plotOptions: {
-            series: {
-                borderWidth: 0,
+          useHTML:true,
+          shared: true,
+          enabled :true,
+          followpointer: true,
+          headerFormat: '<span style="font-size: 15px">{point.key}</span><br/>',
+          pointFormatter: function(){
+            //console.log(this);
+            return '<div style="font-size:15px"><strong>' + 
+              ((this.high-this.low)/(24*3600*1000)).toFixed(2) + ' days</strong></div>';
+          }
+        },
+
+        plotOptions: {
+            columnrange: {
                 dataLabels: {
                     enabled: true,
-                    format: '{point.y:.1f} days'
+                    //inside: true,
+                    //align: center,
+                    useHTML: true,
+                    formatter: function() {
+                      //console.log(this);
+                      return Highcharts.dateFormat('%e %b', this.y);
+                      //return ((this.point.high-this.point.low)/(24*3600*1000)).toFixed(2) + ' days';
+                      /*return '<div style="text-align:center;color:black;width:' 
+                      + (this.point.plotLow - this.point.plotHigh) + 'px"> ' 
+                      + ((this.point.high-this.point.low)/(24*3600*1000)).toFixed(2) 
+                      + ' days</div>';*/
+                    }
                 }
             }
-          },
-          series: [{
-            name: 'Planning Time',
-            colorByPoint: true,
-            //innerSize: '50%',
+        },
+
+        legend: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Dates',
             data: [
-              ['1) Consult-CTSim', $scope.planTimes.planTimes[3]],
-              ['2) CTSim-MD Contour', $scope.planTimes.planTimes[2]],
-              ['3) MD Contour-Dose Calculation', $scope.planTimes.planTimes[1]],
-              ['4) Dose Calculation-Treatment', $scope.planTimes.planTimes[0]],
+                [
+                Date.parse($scope.planTimes.sequence[4].JSDate), 
+                Date.parse($scope.planTimes.sequence[3].JSDate)
+                ],
+                [
+                Date.parse($scope.planTimes.sequence[3].JSDate), 
+                Date.parse($scope.planTimes.sequence[2].JSDate)
+                ],
+                [
+                Date.parse($scope.planTimes.sequence[2].JSDate), 
+                Date.parse($scope.planTimes.sequence[1].JSDate)
+                ],
+                [
+                Date.parse($scope.planTimes.sequence[1].JSDate), 
+                Date.parse($scope.planTimes.sequence[0].JSDate)
+                ]
             ]
-          }]
-        });
+        }]
+
+      });
       }
     });
   }
