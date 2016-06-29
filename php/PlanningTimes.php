@@ -100,10 +100,10 @@ class PlanningTimes{
 			$datetime1->setTimestamp(strtotime($this->sequence[$keys[$i]]['CreationDate']));
 			$datetime0->setTimestamp(strtotime($this->sequence[$keys[$i-1]]['CreationDate']));
 			$interval = $datetime0->diff($datetime1);
-			$days = $interval->days + 1;
-
+			$days = $interval->days;
+			$hours = $interval->format('%h');
 			//remove weekends
-			$period = new DatePeriod($datetime0, new DateInterval('P1D'), $datetime1);
+			$period = new DatePeriod($datetime1, new DateInterval('P1D'), $datetime0);
 
 			// dummy incase want to add more uncomment to add holidays
 			//$holidays = array('2012-09-07');
@@ -117,9 +117,10 @@ class PlanningTimes{
 				// substract if Saturday or Sunday
 				if ($curr == 'Sat' || $curr == 'Sun') {
 					$days--;
+					//echo 'Found sat or sun';
 				}
 			}
-			$this->planTimes[] = $days;
+			$this->planTimes[] = $days + $hours/24;
 		}
 		//echo max($this->planTimes) < $NUMBER_OF_DAYS_CUTOFF;
 		if (max($this->planTimes) < self::NUMBER_OF_DAYS_CUTOFF){

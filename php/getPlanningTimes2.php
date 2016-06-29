@@ -42,7 +42,7 @@ UNION
 SELECT DISTINCT
 pt.PatientId,
 ac.ActivityCode,
-sa.CreationDate
+sa.ScheduledStartTime as CreationDate
 
 FROM
 Patient pt,
