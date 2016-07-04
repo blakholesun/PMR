@@ -36,6 +36,8 @@ AND aci.ActivitySer = ac.ActivitySer
 --AND pt.PatientId = '1138005'
 AND pt.PatientId = '$patientID'
 AND nsa.ObjectStatus NOT LIKE '%Deleted%'
+AND ac.ActivityCode NOT LIKE '%CT%'
+AND ac.ActivityCode NOT LIKE '%CONSULT%'
 
 UNION
 
