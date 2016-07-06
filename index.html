@@ -7,24 +7,32 @@
   <link rel="icon" href="">
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap2.min.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body ng-app="myApp" >
+  <div class="se-pre-con">
+    <h2 id="middle">Grabbing Patient Data!</h2>
+  </div>
+  <pagecontroller></pagecontroller>
+  <!-- <div ng-view></div> -->
+</body>
+  
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
-  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script> -->
   <script src="bower_components/highcharts/highcharts.js"></script>
   <script src="bower_components/highcharts/highcharts-more.js"></script>
   <script src="bower_components/highcharts/modules/drilldown.js"></script>
   <script src="bower_components/highcharts/modules/data.js"></script>
   <script src="bower_components/highcharts/modules/exporting.js"></script>
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
-  <script src="bower_components/bootstrap-autohidingnavbar/src/jquery.bootstrap-autohidingnavbar.js
-  "></script>
+
   <script src="js/base.app.js"></script>
+  <!-- <script src="js/unused/app.config.js"></script> -->
   <script src="js/main/chart.service.js"></script>
+  <script src="js/main/patientTreatmentInfo.service.js"></script>
+  <script src="js/main/init.service.js"></script>
+  <script src="js/main/update.service.js"></script>
   <script src="js/main/mainpage.component.js"></script>
-</head>
-<body ng-app="myApp" >
-  <pagecontroller></pagecontroller>
-</body>
 </html>
+  

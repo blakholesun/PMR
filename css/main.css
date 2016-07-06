@@ -3,6 +3,7 @@
     padding-top: 80px;
     font-size: 200%;
     color: black;
+    background-color: #EEEEEE;
   }
 
   p{
@@ -140,6 +141,11 @@
 /*  .tab-content .tab-pane {    
     position: relative;
 }*/
+  
+  .form-control{
+    color: white;
+  }
+
 
   /*=======================================
   Footer

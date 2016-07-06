@@ -1,0 +1,224 @@
+<nav id="nav" class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Patient Management</a>
+    </div>
+    <div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#">Weekly Analytics</a></li>
+          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Patient <span class="caret"></span></a>
+            <ul class="dropdown-menu scrollable-menu">
+              <li class="dropdown-header" ng-repeat-start="x in dataList">
+                Dr. {{x.firstName + " " + x.lastName}}
+              </li>
+              <li ng-repeat-end ="x in dataList" ng-repeat="n in x.patients ">
+                <a href="" ng-click="updateActivePatient(n.ID); grabPatientInfo()">
+                  {{n.lastName + ", " + n.firstName + " (" + n.ID +") "}}
+                  <!-- ***{{n.ID}} -->
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul id="center" class = "nav navbar-nav">
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="" data-tab-destination="overview-tab" ng-click="previousPatient(); grabPatientInfo();" >
+            <span class="glyphicon glyphicon-arrow-left"></span> Previous Patient </a>
+          </li>
+          <li><a href="" data-tab-destination="overview-tab" ng-click="nextPatient(); grabPatientInfo();"> Next Patient 
+            <span class="glyphicon glyphicon-arrow-right"></span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>    
+
+<!-- ANALYTICA MIGHT REMOVE -->
+<!-- <div id="section1" class="panel-group">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 id="analytics1" class="panel-title">
+        <a data-toggle="collapse" href="#collapse2">Weekly Analytics</a>
+      </h3>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse in">
+      <div class="container-fluid">
+        <div id="fluid" class="container-fluid">
+          <div class="col-sm-3">
+            <div class="well well_analytics">
+              Patients to Review
+              <span class="badge">{{numPatients}}</span>                
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="well well_analytics">
+              Patients to Review
+              <span class="badge">{{numPatients}}</span>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="well well_analytics">
+              Patients to Review
+              <span class="badge">{{numPatients}}</span>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="well well_analytics">
+              Patients to Review
+              <span class="badge">{{numPatients}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr> -->
+<!-- PATIENT REVIEW FIELD -->
+<div id="section2" class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-2" id="sidepane">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h2 class="panel-title">
+            {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+            {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+            <!-- *** -->
+          </h2>
+        </div>
+        <div class="panel-body">
+          <img class="img-responsive img-rounded" ng-if="patientPhoto != 'No records found.' " 
+          ng-src="data:image/JPEG;base64,{{patientPhoto}}">
+          <img class="img-responsive img-rounded" ng-if="patientPhoto == 'No records found.' " 
+          ng-src="img/noimage.png">
+          <!-- <img class="img-responsive img-rounded" ng-src="img/noimage.png"> -->
+        </div>
+      </div>
+
+      <div class="panel-group" style="margin:0;">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <H2 class="panel-title">
+              <a data-toggle="collapse" href="#collapse1">Documents</a>
+              <div id="question" class="glyphicon glyphicon-question-sign" data-container="body" data-toggle="popover" data-placement="auto" data-content='Green documents are signed or approved. Red documents are unsigned and unapproved.' data-original-title="" title=""></div>
+              <br>
+              <form>
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" ng-model="docu">
+                  </div>      
+                </div>
+              </form>
+            </H2>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse in">
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="x in documents | orderBy:keepOnTop | filter:docu">
+                <a href="" ng-click="displayDocument(x.FileName)" ng-class="(x.ApprovalStatus == 'Approved' || x.Signed == 'Signed') ? 'text-success' : 'text-danger'"><strong>{{x.DocType}}</strong></a>
+                <p><small>{{x.Date | date:'short'}} <!-- {{x.ApprovalStatus}} --></small></p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div><br>
+    </div>
+
+    <div class="col-sm-10">
+
+      <h2 style="margin: 0;"><center>{{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+        {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+        ({{patientID}})</center></h2>
+
+
+        <div id="Documents" >
+          <div class="row content">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab" aria-expanded="true">
+                Overview</a>
+              </li>
+              <li class=""><a href="#docpane" id="doc-tab" data-toggle="tab" aria-expanded="false">
+                Documents</a>
+              </li>
+            </ul> <br>
+
+            <div id="myTabContent" class="tab-content">
+              <div class="tab-pane active fade in" id="overview">
+                <div class="col-sm-3">
+                  <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading"><strong>General</strong></div>
+                      <ul class="list-group">
+                        <li ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>New Start</strong>: {{NewStart.toDateString()}}</li>
+                        <li ng-class="(NewStart > SGAS ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>SGAS Due</strong>: {{SGAS.toDateString()}}</li>
+                        <li class="list-group-item"><strong>Doctor</strong>: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Required Documents</strong></div>
+                    <ul class="list-group">
+                      <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')"><div style="display:inline;">{{x.fileType}}</div>
+                        <div style="display:inline; float:right"><img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable"></div>
+                        <div style="display:inline; float:right"><img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable"></div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading"><strong>Diagnosis</strong></div>
+                      <ul class="list-group">
+                        <li class="list-group-item">
+                          <span ng-repeat-start="x in patientDiagnosis" class="text-primary">
+                            [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
+                          </span>
+                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
+                          <p ng-repeat-end="x in patientDiagnosis" style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></p>
+                        </li>
+                      </ul>
+                    </div>
+                    <br>
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Planning</strong></div>
+                        <ul class="list-group">
+                          <li class="list-group-item" ng-repeat="x in TreatmentInfo">
+                            <strong>{{x.Plan}}:</strong> <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong><br>
+                            <small><strong>Plan Date: </strong>{{x.PlanDate}}</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading" style="text-align:center"><strong>Patient Planning Times</strong></div>
+                      <div id="progress"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="docpane">
+                <div id="Doc">
+                  <h2>Please select a document from the list on the left.</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
