@@ -17,7 +17,7 @@ pt.PatientId,
 pt.LastName,
 pt.FirstName,
 --pt.PatientSer,
---ac.ActivityCode,
+ac.ActivityCode,
 nsa.NonScheduledActivityCode,
 --nsa.ObjectStatus,
 nsa.CreationDate,
@@ -65,27 +65,29 @@ if(!mssql_num_rows($query)) {
 }else{
 
   while($row = mssql_fetch_array($query)){
-    $phpdate = strtotime($row[11]);
+    $phpdate = strtotime($row[12]);
     $mysqldate = date( 'M d Y', $phpdate );
-
-    if ($row[9] == ""){
-      $row[9] = "Stage Not Available";
-    } elseif ($row[10] == ""){
-      $row[10] = "Not Available";
+    $row[3] = str_replace("PMR", "", $row[3]);
+    if ($row[10] == ""){
+      $row[10] = "Stage Not Available";
+    } 
+    if ($row[11] == ""){
+      $row[11] = "Not Available";
     }
     //str_replace("Malignant neoplasm", "CA - ", $row[10]);
     $rowArr = array(
       'PatientID'     => $row[0],
       'LastName'      => $row[1],
       'FirstName'     => $row[2],
-      'NSAC'          => $row[3],
-      'CreationDate'  => $row[4],
-      'DocFirstName'  => $row[5],
-      'DocLastName'   => $row[6],
-      'TumorSize'     => $row[7],
-      'SummaryStage'  => $row[8],
-      'StageCriteria' => $row[9],
-      'Diagnosis'     => $row[10],
+      'PMR'           => $row[3],
+      'NSAC'          => $row[4],
+      'CreationDate'  => $row[5],
+      'DocFirstName'  => $row[6],
+      'DocLastName'   => $row[7],
+      'TumorSize'     => $row[8],
+      'SummaryStage'  => $row[9],
+      'StageCriteria' => $row[10],
+      'Diagnosis'     => $row[11],
       'DiagDate'      => $mysqldate
     );
     array_push($arr,$rowArr);

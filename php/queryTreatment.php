@@ -21,7 +21,7 @@
     ci.ConfigValue,
     co.CourseId,
     ps.PlanSetupId,
-    convert(date, ps.CreationDate) AS CreationDate,
+    convert(date, ps.StatusDate) AS CreationDate,
     ps.Intent,
     co.ClinicalStatus,
     ps.Status,
@@ -43,7 +43,7 @@
     WHERE
     --pt.PatientId = '$patientID'
     (pt.PatientId = '$patientID' OR pt.PatientId2 = '$patientID') 
-    --pt.PatientId = '5197129'
+    --pt.PatientId = '5213748'
     AND ps.Status IN ('TreatApproval', 'PlanApproval', 'Reviewed', 'Completed')
     AND pt.PatientSer = co.PatientSer
     AND radp.RTPlanSer = rt.RTPlanSer 

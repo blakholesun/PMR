@@ -88,7 +88,7 @@ if(!mssql_num_rows($query)) {
   // set tokens in planTime
   $planTime->setTokens($tokens);
 
-  // set filetr for daseclac
+  // set filetr for doseclac
   $events = array("READY FOR ELECTRON PLANNING", "READY FOR IMRT PLANNING",
    "READY FOR STEREOTACTIC PLANNING", "READY FOR TBI CALCULATION");
 
@@ -97,6 +97,9 @@ if(!mssql_num_rows($query)) {
     // Map 
     if (in_array($row[1], $events)){
       $row[1] = "READY FOR DOSE CALCULATION";
+    }
+    else if (strpos($row[1], "OFFSITE")){
+      $row[1]  = str_replace("CON", "CONSULT", $row[1]);
     }
 
     $rowArray = array(

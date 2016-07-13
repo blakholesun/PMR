@@ -103,23 +103,23 @@ class PlanningTimes{
 			$days = $interval->days;
 			$hours = $interval->format('%h');
 			//remove weekends
-			$period = new DatePeriod($datetime1, new DateInterval('P1D'), $datetime0);
+			//$period = new DatePeriod($datetime1, new DateInterval('P1D'), $datetime0);
 
 			// dummy incase want to add more uncomment to add holidays
 			//$holidays = array('2012-09-07');
-			foreach($period as $dt) {
-				$curr = $dt->format('D');
+			//foreach($period as $dt) {
+				//$curr = $dt->format('D');
 				// for the updated question
 				// uncomment to add holidays
 				/*if (in_array($dt->format('Y-m-d'), $holidays)) {
 					$days--;
 				}*/
 				// substract if Saturday or Sunday
-				if ($curr == 'Sat' || $curr == 'Sun') {
-					$days--;
+				//if ($curr == 'Sat' || $curr == 'Sun') {
+					//$days--;
 					//echo 'Found sat or sun';
-				}
-			}
+				//}
+			//}
 			$this->planTimes[] = $days + $hours/24;
 		}
 		//echo max($this->planTimes) < $NUMBER_OF_DAYS_CUTOFF;
