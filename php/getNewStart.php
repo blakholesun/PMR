@@ -28,7 +28,7 @@ variansystem.dbo.Activity Activity
 
 WHERE     
 ScheduledActivity.ActivityInstanceSer = ActivityInstance.ActivityInstanceSer
-AND ScheduledActivity.ScheduledStartTime < DATEADD(day,0,CONVERT(date,GETDATE()))
+AND ScheduledActivity.ScheduledStartTime < DATEADD(day,7,CONVERT(date,GETDATE()))
 
 AND ActivityInstance.ActivitySer = Activity.ActivitySer
 AND Patient.PatientSer 				= ScheduledActivity.PatientSer         

@@ -269,6 +269,7 @@ class Patient
 	    AND (Patient.PatientId = :pID OR Patient.PatientId2 = :pID )
 	    --AND Patient.PatientId = '5218456'
 	    AND note_typ.note_typ = visit_note.note_typ
+	    AND visit_note.valid_entry_ind = 'Y'
 	    ORDER BY CreationDate DESC
 	    ";
 
@@ -424,7 +425,7 @@ class Patient
 			$mysqldate = date( 'M d Y', $phpdate );
 		}
 
-		return array('DueDate'=>$mysqldate);
+		return array('DueDate'=>$mysqldate, 'Priority'=>$row[1]);
     }
 
     public function getTreatmentInfo()

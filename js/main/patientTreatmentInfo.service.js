@@ -23,7 +23,7 @@ angular.module('myApp').factory('patientTreatInfo', ['$http','$q', function ($ht
 						planCreationDate = new Date(TreatmentInfo[item1][item].date);
 						if (TreatmentInfo[item1][item].hasOwnProperty('dose')
 							//&& TreatmentInfo[item1][item].cstatus === 'ACTIVE'
-							&& planCreationDate > cutoffDate
+							//&& planCreationDate > cutoffDate
 							&& TreatmentInfo[item1][item].intent !== 'VERIFICATION'
 							&& TreatmentInfo[item1][item].status === 'TreatApproval'){
 

@@ -7,7 +7,7 @@ class PlanningTimes{
 	private $planTimes;
 	private $eventTokens;
 	private $originalSequence;
-	const NUMBER_OF_DAYS_CUTOFF = 180;
+	const NUMBER_OF_DAYS_CUTOFF = 360;
 /*	private $isValid = false;*/
 	
 	public function __construct(){
@@ -59,9 +59,13 @@ class PlanningTimes{
 		if (count($this->eventTokens) === 0 || count($this->originalSequence) === 0){
 			return false;
 		}
+		
 		$cutoffDate = new DateTime();
 		$creationDate = new DateTime();
 		$oSequence = $this->originalSequence;
+		//$firstCreationDate = strtotime($oSequence[0]['CreationDate']);
+		//Look 7 days ahead
+		$cutoffDate->add(new DateInterval('P7D'));
 		$eTokens = $this->eventTokens;
 		foreach( $eTokens as $token => $eventName){
 			foreach ($oSequence as $row => $rowValue){

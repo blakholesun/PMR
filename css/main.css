@@ -3,7 +3,7 @@
     padding-top: 80px;
     font-size: 200%;
     color: black;
-    background-color: #EEEEEE;
+    background-color: #ffffff;
   }
 
   p{
@@ -108,6 +108,7 @@
 
   .panel-heading{
     font-size: 125%;
+    /*background-color: #64B5F6;*/
   }
 
   .img-responsive {
@@ -145,6 +146,15 @@
   .form-control{
     color: white;
   }
+  option {
+    padding: 40px;
+    font-size: 125%;
+    color: #666666;
+  }
+  select{
+    padding: 40px;
+    border: 10px;
+  }
 
 
   /*=======================================
@@ -156,7 +166,7 @@
   }
 
   #progress {
-    height: 500px; 
+    height: 575px; 
     width: auto;
     margin: 0 auto;
   }

@@ -41,10 +41,10 @@ INNER JOIN Diagnosis diag ON pt.PatientSer = diag.PatientSer
 INNER JOIN PrmryDiagnosis pdiag ON diag.DiagnosisSer = pdiag.DiagnosisSer 
 
 WHERE
-nsa.CreationDate >= DATEADD(day,-14,CONVERT(date,GETDATE()))
+nsa.CreationDate >= DATEADD(day,-8,CONVERT(date,GETDATE()))
 AND
---nsa.NonScheduledActivityCode LIKE '%Open%'
-nsa.NonScheduledActivityCode LIKE '%Completed%'
+nsa.NonScheduledActivityCode LIKE '%Open%'
+--nsa.NonScheduledActivityCode LIKE '%Completed%'
 AND
 ac.ActivityCode LIKE '%PMR%'
 AND

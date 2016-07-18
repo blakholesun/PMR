@@ -18,6 +18,8 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     $scope.activePatientIndex = 0; 
     $scope.patientID = initData.dataList[0].patients[0].ID;
     $scope.patientDiagnosis = initData.dataList[0].patients[0].diagnosis;
+    $scope.doctorLast ="";
+    $scope.doctorFirst ="";
     
     // First patient info
     updateService.getPhoto($scope.patientID).then(function(data){
@@ -36,13 +38,15 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     });
 
     //Get new start and SGAS dates
+
     updateService.getNewStart($scope.patientID).then(function(data){
       $scope.NewStart = data[0];
       $scope.SGAS = data[1];
+      updateService.makeChart('#progress', $scope.patientID, $scope.SGAS);
     });
 
     //Build chart
-    updateService.makeChart('#progress', $scope.patientID);
+    
 
     console.log($scope.dataList);
 
@@ -68,8 +72,23 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     }
   }
 
-  //Grabs new patient info on next or previous click
+  $scope.updateDoctor = function(index){
+    if (index === -1){
+      $scope.doctorLast = "";
+      $scope.doctorFirst = "";
+    } else{
+      $scope.doctorLast = $scope.dataList[index].lastName;
+      $scope.doctorFirst = $scope.dataList[index].firstName;
+    }
+  }
+
+  //Grabs new patient info on next or previous click or 
   $scope.grabPatientInfo = function() {
+    if ($scope.doctorLast !==""){
+      $scope.doctorLast = $scope.dataList[$scope.activeDoctorIndex].lastName;
+      $scope.doctorFirst = $scope.dataList[$scope.activeDoctorIndex].firstName;
+    }
+
     updateService.getPhoto($scope.patientID).then(function(data){
       $scope.patientPhoto = data;
     });
@@ -86,12 +105,13 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     updateService.getNewStart($scope.patientID).then(function(data){
       $scope.NewStart = data[0];
       $scope.SGAS = data[1];
+      $("#overview-tab").click();
+        $timeout(function() {
+          updateService.makeChart('#progress', $scope.patientID, $scope.SGAS);
+        }, 100);
     });
 
-    $("#overview-tab").click();
-    $timeout(function() {
-      updateService.makeChart('#progress', $scope.patientID);
-    }, 100);
+    
     $timeout(function() {
       var element = document.getElementById("docpane");
       var original = document.getElementById("Doc");

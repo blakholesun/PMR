@@ -52,6 +52,7 @@
     AND (Patient.PatientId = '$patientID' OR Patient.PatientId2 = '$patientID' )
     --AND Patient.PatientId = '5218456'
     AND note_typ.note_typ = visit_note.note_typ
+    AND visit_note.valid_entry_ind = 'Y'
     ORDER BY CreationDate DESC
     ";
 

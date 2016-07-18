@@ -44,6 +44,29 @@ UNION
 SELECT DISTINCT
 pt.PatientId,
 ac.ActivityCode,
+nsa.DueDateTime
+
+FROM
+Patient pt,
+NonScheduledActivity nsa,
+ActivityInstance aci,
+Activity ac
+
+WHERE
+pt.PatientSer = nsa.PatientSer
+AND nsa.ActivityInstanceSer = aci.ActivityInstanceSer
+AND aci.ActivitySer = ac.ActivitySer
+--AND nsa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE()))
+--AND pt.PatientId = '1138005'
+AND pt.PatientId = '$patientID'
+AND nsa.ObjectStatus NOT LIKE '%Deleted%'
+AND ac.ActivityCode LIKE '%CONSULT REFERRAL RECEIVED%'
+
+UNION
+
+SELECT DISTINCT
+pt.PatientId,
+ac.ActivityCode,
 sa.ScheduledStartTime as CreationDate
 
 FROM
@@ -78,12 +101,14 @@ if(!mssql_num_rows($query)) {
   $planTime = new PlanningTimes();
 
   //list of tokens to look for
-	$tokens = array("ready for treatment",
+	$tokens = array("new start",
+                  "ready for treatment",
                   //"ready to show",
                   "ready for dose calculation",
                   "ready for md contour", 
                   "ct sim",
-                  "consult");
+                  "consult",
+                  "received");
 
   // set tokens in planTime
   $planTime->setTokens($tokens);
@@ -98,9 +123,16 @@ if(!mssql_num_rows($query)) {
     if (in_array($row[1], $events)){
       $row[1] = "READY FOR DOSE CALCULATION";
     }
-    else if (strpos($row[1], "OFFSITE")){
+    if (strpos($row[1], 'OFFSITE') !== false){
       $row[1]  = str_replace("CON", "CONSULT", $row[1]);
     }
+    if (strpos($row[1], 'One Rx') !== false){
+      $row[1]  = "New Start";
+    }
+    /*if (strpos($row[1], 'RECEIVED') !== false){
+      $row[2] = substr($row[2], 0,11);
+      //echo $row[2];
+    }*/
 
     $rowArray = array(
     'PatientId'         => $row[0],

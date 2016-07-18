@@ -51,7 +51,7 @@ if(!mssql_num_rows($query)) {
 	$mysqldate = date( 'M d Y', $phpdate );
 }
 
-echo json_encode(array('DueDate'=>$mysqldate));
+echo json_encode(array('DueDate'=>$mysqldate, 'Priority'=>$row[1]));
 
 mssql_free_result($query);
 
