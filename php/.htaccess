@@ -1,0 +1,5 @@
+AuthName "Passwird Protected Area" 
+AuthType Basic 
+AuthUserFile /home/robert/.htpasswd 
+AuthGroupFile /dev/null 
+require valid-user

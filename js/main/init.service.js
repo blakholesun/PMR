@@ -6,7 +6,7 @@ angular.module('myApp').factory('initPage', ['$http','$q', function ($http,$q) {
 
 			var defer = $q.defer();
 
-			$http.post("php/getPatientData",{}).then(function (response) {
+			$http.post("api/getAllPatients/").then(function (response) {
     			
     			var allPatientData = {};
 
@@ -21,13 +21,15 @@ angular.module('myApp').factory('initPage', ['$http','$q', function ($http,$q) {
 			    }
 
 			    //Create a patient class to store names and id
-			    function Patient(firstName, lastName, ID, PMR){
+			    function Patient(firstName, lastName, ID, PMR, DOB, Sex){
 			      this.firstName      = firstName;
 			      this.lastName       = lastName;
 			      this.ID             = ID;
 			      this.diagnosis      = [];
 			      this.isReviewed     = false;
 			      this.PMR			  = PMR;
+			      this.DOB			  = DOB;
+			      this.Sex			  = Sex;
 			    }
 
 			    //
@@ -71,7 +73,9 @@ angular.module('myApp').factory('initPage', ['$http','$q', function ($http,$q) {
 			              var patient = new Patient(  data[j].FirstName,
 			                data[j].LastName,
 			                data[j].PatientID,
-			                data[j].PMR);
+			                data[j].PMR,
+			                data[j].DateOfBirth,
+			                data[j].Sex);
 
 			              patient.diagnosis.push(diagnosisData);
 			              dataList[dataList.length-1].patients.push(patient);

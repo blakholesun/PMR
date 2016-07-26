@@ -36,7 +36,7 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 
 		    for (var x in documents){        
 		      	var name = documents[x].DocType.toLowerCase();
-		      	var date = new Date(documents[x].Date.substring(0,11));
+		      	var date = new Date(documents[x].ApprovalTime.substring(0,11));
 		      	var cutoffDate = new Date();
 		      	// Change this value for cutoff date
 		      	cutoffDate.setDate(cutoffDate.getDate()-360)
@@ -48,6 +48,7 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 			          	requiredDocuments[i].isAvailable = true;
 			          	requiredDocuments[i].Approval = documents[x].ApprovalStatus;
 			          	requiredDocuments[i].Signed = documents[x].Signed;
+			          	requiredDocuments[i].ApprovalDate = date;
 			          	namesearch[i].found = true;
 		      			}
 		      		}
@@ -61,7 +62,7 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 
 		getPhoto: function(patientId){
 			var defer = $q.defer();
-			$http.post( "php/getPatientPhoto.php", {patientID: patientId})
+			$http.post( "api/getPatientPhoto/"+patientId)
     		.then( function (response) {
       			patientPhoto = response.data;
       			defer.resolve(patientPhoto);
@@ -71,7 +72,7 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 
 		getDocs: function(patientId){
 			var defer = $q.defer();
-			$http.post( "php/getPatientDocuments.php", {patientID: patientId})
+			$http.post( "api/getPatientDocumentList/" + patientId)
     		.then( function (response) {
     			docData = {};
       			docData.documents = response.data;
@@ -81,8 +82,8 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 			return defer.promise;
 		},
 
-		makeChart: function(element,patientID, SGAS){
-			chartService(element, patientID, SGAS);
+		makeChart: function(element,patientID, SGAS, reqdate){
+			chartService(element, patientID, SGAS, reqdate);
 		},
 
 		getTreatInfo: function(patientID){
@@ -92,19 +93,19 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 		getNewStart: function(patientId){
 			var defer1 = $q.defer();
 			var defer2 = $q.defer();
-			$http.post( "php/getNewStart.php", {patientID: patientId})
+			$http.post( "api/getNewStart/" + patientId)
     		.then( function (response) {
       			newStart = new Date(response.data.startDate);
       			defer1.resolve(newStart);
     		});
-    		$http.post( "php/getSGAS.php", {patientID: patientId})
+    		$http.post( "api/getSGAS/" + patientId)
     		.then( function (response) {
     			var SGAS = {};
     			//console.log(response.data.DueDate)
       			SGAS.DueDate = new Date(response.data.DueDate);
       			SGAS.DueDate.setHours(20);
       			SGAS.Priority = response.data.Priority;
-  				SGAS.MedicallyReady = new Date();
+  				//SGAS.MedicallyReady = new Date();
   				SGAS.priorityNum = parseInt(SGAS.Priority.substr(SGAS.Priority.length -1 ));
   				//console.log(priority);
   				var daysToDue = 0;
@@ -123,7 +124,7 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
   						break;
   				}
   				//console.log(daysToDue);
-  				SGAS.MedicallyReady.setDate(SGAS.DueDate.getDate() - daysToDue);
+  				SGAS.MedicallyReady = new Date(SGAS.DueDate - daysToDue*24*3600*1000);
       			console.log(SGAS);
       			defer2.resolve(SGAS);
     		});

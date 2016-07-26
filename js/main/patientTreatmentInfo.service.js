@@ -5,7 +5,7 @@ angular.module('myApp').factory('patientTreatInfo', ['$http','$q', function ($ht
 
 			var defer = $q.defer();
 
-			$http.post("php/queryTreatment.php", {patientID: patientId})
+			$http.post("api/getTreatmentInfo/" + patientId)
 			.then( function (response) {
 				patTreatInfo = [];
 				var TreatmentInfo = response.data;

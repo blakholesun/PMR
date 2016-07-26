@@ -1,8 +1,8 @@
 angular.module('myApp').factory('chartService', ['$http', function ($http) {
 
-  return function(element,patientId,SGAS){
+  return function(element,patientId,SGAS,reqdate){
 
-    $http.post("php/getPlanningTimes2", {patientID: patientId})
+    $http.post("api/getPlanningTimes/" + patientId/*, {patientID: patientId}*/)
     .then( function (response) {
 
       var times = {};
@@ -71,22 +71,7 @@ angular.module('myApp').factory('chartService', ['$http', function ($http) {
       }
 
       var elapsed = function(times, SGAS){
-
-        var consultDate = new Date(times.planTimes.sequence[
-          times.planTimes.sequence.length-1]['JSDate']);
-        console.log(consultDate);
-        console.log(SGAS.MedicallyReady);
-        var medReady = SGAS.MedicallyReady.getTime();
-        if (medReady < consultDate){
-          medReady = consultDate;
-        }
-        consultToMR = (medReady - consultDate)/(24*3600*1000);
-        consultToNew = times.planTimes.planTimes.reduce((pv, cv) => pv+cv, 0).toFixed(0);
-        if (consultToNew < consultToMR){
-          return consultToNew;
-        }else {
-          return (consultToNew - consultToMR).toFixed(2);
-        }
+        return ((new Date(times.planTimes.sequence[0]['JSDate']) - SGAS.MedicallyReady)/(24*3600*1000)).toFixed(2);
       }
 
       if (!times.planTimes.hasOwnProperty('planTimes')){
@@ -119,10 +104,12 @@ angular.module('myApp').factory('chartService', ['$http', function ($http) {
             type: 'columnrange',
             zoomType: 'y',
             inverted: true
+            //borderColor: '#76FF03',
+            //borderWidth: 2
           },
 
           title: {
-            text: 'Elapsed time from Medically Ready: <strong>' + 
+            text: 'Elapsed time from Medically Ready to New Start: <br><strong>' + 
             elapsed(times,SGAS) +
             ' </strong> days'
           },
@@ -170,6 +157,20 @@ angular.module('myApp').factory('chartService', ['$http', function ($http) {
               color: 'red', // Color value
               //dashStyle: 'longdashdot', // Style of the plot line. Default to solid
               value: SGAS.DueDate, // Value of where the line will appear
+              width: 2, // Width of the line
+              zIndex: 3,
+              dashStyle: 'ShortDot'
+            },{
+              label: { 
+                text: 'REQ', // Content of the label. 
+                align: 'center', // Positioning of the label. 
+                verticalAlign: 'bottom',//Default to center. x: +10 // Amount of pixels the label will be repositioned according to the alignment. 
+                //rotation:0,
+                y:-15
+              },
+              color: 'blue', // Color value
+              //dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+              value: reqdate, // Value of where the line will appear
               width: 2, // Width of the line
               zIndex: 3,
               dashStyle: 'ShortDot'

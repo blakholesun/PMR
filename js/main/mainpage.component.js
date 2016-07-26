@@ -42,10 +42,10 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     updateService.getNewStart($scope.patientID).then(function(data){
       $scope.NewStart = data[0];
       $scope.SGAS = data[1];
-      updateService.makeChart('#progress', $scope.patientID, $scope.SGAS);
+      $timeout(function() {
+          updateService.makeChart('#progress', $scope.patientID, $scope.SGAS, $scope.requiredDocuments[2].ApprovalDate);
+      }, 200);
     });
-
-    //Build chart
     
 
     console.log($scope.dataList);
@@ -82,6 +82,15 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     }
   }
 
+  $scope.getAge = function(){
+    var today = new Date();
+    var dob = $scope.dataList[$scope.activeDoctorIndex].patients[$scope.activePatientIndex].DOB;
+    dob = new Date(dob.substr(0,12));
+    //console.log(dob);
+    return Math.floor((today-dob)/(365*24*3600*1000));
+
+  }
+
   //Grabs new patient info on next or previous click or 
   $scope.grabPatientInfo = function() {
     if ($scope.doctorLast !==""){
@@ -107,8 +116,8 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
       $scope.SGAS = data[1];
       $("#overview-tab").click();
         $timeout(function() {
-          updateService.makeChart('#progress', $scope.patientID, $scope.SGAS);
-        }, 100);
+          updateService.makeChart('#progress', $scope.patientID, $scope.SGAS, $scope.requiredDocuments[2].ApprovalDate);
+        }, 200);
     });
 
     
@@ -162,14 +171,24 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
   }
 
   // Grabbing the patient document that is clicked on
-  $scope.displayDocument = function(filename){
-    var options = {
-      pdfOpenParams: { view: 'FitH', page: '1' }
-    };
+  $scope.displayDocument = function(doc){
+    console.log(doc);
 
-    $http.post( "php/downloadPDF.php", {FileName: filename}).then( function (response) {
-      PDFObject.embed(response.data, "#Doc", options);
-    });
+    var options = {
+            pdfOpenParams: {
+              zoom: "page-width"
+              //pagemode: "thumbs",
+              //search: "warning: hidden"
+            }
+        }
+
+    var lowerCaseDoc = doc.DocType.toLowerCase();
+    if (lowerCaseDoc.indexOf("distribution") != -1 || lowerCaseDoc.indexOf("imrt") != -1){
+      options.page = 4;
+    }
+    $http.post( "api/getDocument/" + $scope.patientID, {FileName: doc.FileName}).then( function (response) {
+          PDFObject.embed(response.data, "#Doc", options);
+        });
     $("#doc-tab").click();
   }
 

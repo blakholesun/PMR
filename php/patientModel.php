@@ -19,7 +19,7 @@ class Patient
 
     public function getAllPatients() 
     {
-    	$sql = "SELECT
+    	$sql = "SELECT DISTINCT
 		pt.PatientId,
 		pt.LastName,
 		pt.FirstName,
@@ -27,14 +27,16 @@ class Patient
 		ac.ActivityCode,
 		nsa.NonScheduledActivityCode,
 		--nsa.ObjectStatus,
-		nsa.CreationDate,
+		nsa.DueDateTime,
 		doc.FirstName,
 		doc.LastName,
 		pdiag.TumorSize, 
 		pdiag.SummaryStage, 
 		pdiag.StageCriteria, 
 		diag.Description,
-		diag.DateStamp as DiagDate
+		diag.DateStamp as DiagDate,
+		pt.DateOfBirth,
+		pt.Sex
 
 		FROM
 		Patient pt
@@ -48,18 +50,15 @@ class Patient
 		INNER JOIN PrmryDiagnosis pdiag ON diag.DiagnosisSer = pdiag.DiagnosisSer 
 
 		WHERE
-		nsa.CreationDate >= DATEADD(day,-14,CONVERT(date,GETDATE()))
-		AND
-		--nsa.NonScheduledActivityCode LIKE '%Open%'
-		nsa.NonScheduledActivityCode LIKE '%Completed%'
-		AND
-		ac.ActivityCode LIKE '%PMR%'
-		AND
-		pd.PrimaryFlag = '1'
-		AND
-		pd.OncologistFlag = '1'
-		AND
-		diag.Description NOT LIKE '%ERROR%' 
+		--DATENAME(weekday, nsa.DueDateTime) = 'Tuesday'
+		nsa.DueDateTime >= DATEADD(day, 0 ,CONVERT(date,GETDATE()))
+
+		AND nsa.NonScheduledActivityCode LIKE '%Open%'
+		--AND nsa.NonScheduledActivityCode LIKE '%Completed%'
+		AND ac.ActivityCode LIKE '%PMR%'
+		AND pd.PrimaryFlag = '1'
+		AND pd.OncologistFlag = '1'
+		AND diag.Description NOT LIKE '%ERROR%' 
 
 		ORDER BY doc.FirstName ASC, pt.LastName, DiagDate DESC";
 		
@@ -95,7 +94,9 @@ class Patient
 		      'SummaryStage'  => $row[9],
 		      'StageCriteria' => $row[10],
 		      'Diagnosis'     => $row[11],
-		      'DiagDate'      => $mysqldate
+		      'DiagDate'      => $mysqldate,
+		      'DateOfBirth'   => $row[13],
+		      'Sex'           => $row[14]
 		    );
 		    array_push($arr,$rowArr);
 		  }
@@ -138,51 +139,104 @@ class Patient
 
     public function getPlanningTimes()
     {
-    	$sql = "SELECT DISTINCT
-		pt.PatientId,
-		ac.ActivityCode,
-		nsa.CreationDate
+    	$sql = "SELECT DISTINCT 
+		pt.PatientId, 
+		ac.ActivityCode, 
+		nsa.DueDateTime as Date 
 
-		FROM
-		Patient pt,
-		NonScheduledActivity nsa,
-		ActivityInstance aci,
-		Activity ac
+		FROM 
+		Patient pt, 
+		NonScheduledActivity nsa, 
+		ActivityInstance aci, 
+		Activity ac 
 
-		WHERE
-		pt.PatientSer = nsa.PatientSer
-		AND nsa.ActivityInstanceSer = aci.ActivityInstanceSer
-		AND aci.ActivitySer = ac.ActivitySer
-		--AND nsa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE()))
-		--AND pt.PatientId = '1138005'
-		AND pt.PatientId = :pID
-		AND nsa.ObjectStatus NOT LIKE '%Deleted%'
-		AND ac.ActivityCode NOT LIKE '%CT%'
-		AND ac.ActivityCode NOT LIKE '%CONSULT%'
+		WHERE 
+		pt.PatientSer = nsa.PatientSer 
+		AND nsa.ActivityInstanceSer = aci.ActivityInstanceSer 
+		AND aci.ActivitySer = ac.ActivitySer 
+		--AND nsa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE())) 
+		--AND pt.PatientId = '1138005' 
+		AND pt.PatientId = :pID 
+		AND nsa.ObjectStatus NOT LIKE '%Deleted%' 
+		AND ac.ActivityCode LIKE '%L RECEIVED%' 
 
-		UNION
+		UNION 
 
-		SELECT DISTINCT
-		pt.PatientId,
-		ac.ActivityCode,
-		sa.ScheduledStartTime as CreationDate
+		SELECT DISTINCT 
+		pt.PatientId, 
+		ac.ActivityCode, 
+		nsa.CreationDate 
 
-		FROM
-		Patient pt,
-		ScheduledActivity sa,
-		ActivityInstance aci,
-		Activity ac
+		FROM 
+		Patient pt, 
+		NonScheduledActivity nsa, 
+		ActivityInstance aci, 
+		Activity ac 
 
-		WHERE
-		pt.PatientSer = sa.PatientSer
-		AND sa.ActivityInstanceSer = aci.ActivityInstanceSer
-		AND aci.ActivitySer = ac.ActivitySer
-		--AND sa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE()))
-		--AND pt.PatientId = '1138005'
-		AND pt.PatientId = :pID
-		AND sa.ObjectStatus NOT LIKE '%Deleted%'
+		WHERE 
+		pt.PatientSer = nsa.PatientSer 
+		AND nsa.ActivityInstanceSer = aci.ActivityInstanceSer 
+		AND aci.ActivitySer = ac.ActivitySer 
+		--AND nsa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE())) 
+		--AND pt.PatientId = '1138005' 
+		AND pt.PatientId = :pID 
+		AND nsa.ObjectStatus NOT LIKE '%Deleted%' 
+		AND ac.ActivityCode NOT LIKE '%CT%' 
+		AND ac.ActivityCode NOT LIKE '%CONSULT%' 
+		AND ac.ActivityCode NOT LIKE '%L RECEIVED%' 
 
-		ORDER BY nsa.CreationDate DESC
+		UNION 
+
+		SELECT DISTINCT 
+		pt.PatientId, 
+		ac.ActivityCode, 
+		sa.ScheduledStartTime as CreationDate 
+
+		FROM 
+		Patient pt, 
+		ScheduledActivity sa, 
+		ActivityInstance aci, 
+		Activity ac 
+
+		WHERE 
+		pt.PatientSer = sa.PatientSer 
+		AND sa.ActivityInstanceSer = aci.ActivityInstanceSer 
+		AND aci.ActivitySer = ac.ActivitySer 
+		--AND sa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE())) 
+		--AND pt.PatientId = '1138005' 
+		AND pt.PatientId = :pID 
+		AND sa.ObjectStatus NOT LIKE '%Deleted%' 
+		AND ac.ActivityCode NOT LIKE '%CT%' 
+		AND ac.ActivityCode NOT LIKE '%Nursing%' 
+
+		UNION 
+
+		SELECT DISTINCT 
+		pt.PatientId, 
+		ac.ActivityCode, 
+		samh.HstryDateTime 
+
+		FROM 
+		Patient pt, 
+		ScheduledActivity sa, 
+		ScheduledActivityMH samh, 
+		ActivityInstance aci, 
+		Activity ac 
+
+		WHERE 
+		pt.PatientSer = sa.PatientSer 
+		AND sa.ActivityInstanceSer = aci.ActivityInstanceSer 
+		AND samh.ActivityInstanceSer = aci.ActivityInstanceSer 
+		AND aci.ActivitySer = ac.ActivitySer 
+		--AND sa.CreationDate >= DATEADD(day,-45,CONVERT(date,GETDATE())) 
+		--AND pt.PatientId = '1138005' 
+		AND pt.PatientId = :pID 
+		AND ac.ActivityCode LIKE '%CT%' 
+		AND sa.ObjectStatus NOT LIKE '%Deleted%' 
+		AND samh.ObjectStatus NOT LIKE '%Deleted%' 
+		AND samh.ScheduledActivityCode LIKE '%Manually Completed%' 
+
+		ORDER BY Date DESC
 		";
 
 		try {
@@ -200,12 +254,14 @@ class Patient
 		$planTime = new PlanningTimes();
 
 		//list of tokens to look for
-		$tokens = array("ready for treatment",
-		                //"ready to show",
-		                "ready for dose calculation",
-		                "ready for md contour", 
-		                "ct sim",
-		                "consult");
+		$tokens = array(	"new start",
+		                  	"ready for treatment",
+		                  	//"ready to show",
+		                  	"ready for dose calculation",
+		                  	"ready for md contour", 
+		                  	"ct sim",
+		                  	"consult",
+		                  	"l received");
 
 		// set tokens in planTime
 		$planTime->setTokens($tokens);
@@ -220,9 +276,12 @@ class Patient
 		    if (in_array($row[1], $events)){
 		      $row[1] = "READY FOR DOSE CALCULATION";
 		    }
-		    else if (strpos($row[1], "OFFSITE")){
+		    if (strpos($row[1], "OFFSITE")){
 		      $row[1]  = str_replace("CON", "CONSULT", $row[1]);
 		    }
+		    if (strpos($row[1], 'One Rx') !== false){
+      			$row[1]  = "New Start";
+    		}
 
 		    $rowArray = array(
 		    'PatientId'         => $row[0],
@@ -237,8 +296,8 @@ class Patient
 		$isValidTimes = $planTime->generatePlanTime();
 
 		if ( $isSuccess && $isValidTimes){ 
-			return array( 'planTimes'=>$planTime->getPlanTimes(),
-		    	'sequence'=>$planTime->getSequence());
+			return array( 	'planTimes'=>$planTime->getPlanTimes(),
+		    				'sequence'=>$planTime->getSequence());
 		} else {
 			return array( 'sequence'=>$planTime->getSequence());
 		}
@@ -251,7 +310,8 @@ class Patient
 	    note_typ.note_typ_desc,
 	    visit_note.appr_flag,
 	    visit_note.doc_file_loc,
-	    visit_note.signed_stkh_id
+	    visit_note.signed_stkh_id,
+	    visit_note.appr_tstamp
 
 	    FROM
 	    variansystem.dbo.Patient Patient,
@@ -296,13 +356,15 @@ class Patient
 	        }
 	        $phpdate = strtotime($row[0]);
 	        $mysqldate = date( 'M d Y H:i', $phpdate );
+	        $phpdate = strtotime($row[5]);
+	        $apprdate = date( 'M d Y H:i', $phpdate );
 	        $rowArray = array(
 	            'Date'              => $mysqldate,
 	            'DocType'           => $row[1],
 	            'ApprovalStatus'    => $row[2],
 	            'FileName'          => $row[3],
-	            'Signed'            => $row[4]
-	            
+	            'Signed'            => $row[4],
+	            'ApprovalTime'      => $apprdate
 	        );
 	        array_push($json,$rowArray);
 	    }
@@ -457,7 +519,7 @@ class Patient
 	    RadiationRefPoint radp
 
 	    WHERE
-	    --pt.PatientId = '$patientID'
+	    --pt.PatientId = :pID
 	    (pt.PatientId = :pID OR pt.PatientId2 = :pID) 
 	    --pt.PatientId = '5213748'
 	    AND ps.Status IN ('TreatApproval', 'PlanApproval', 'Reviewed', 'Completed')
