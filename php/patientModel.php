@@ -17,8 +17,9 @@ class Patient
     	$this->PatientID = $PatientID;
     }
 
-    public function getAllPatients() 
+    public function getAllPatients($request) 
     {
+    	//echo print_r($request);
     	$sql = "SELECT DISTINCT
 		pt.PatientId,
 		pt.LastName,
@@ -51,11 +52,15 @@ class Patient
 
 		WHERE
 		--DATENAME(weekday, nsa.DueDateTime) = 'Tuesday'
-		nsa.DueDateTime >= DATEADD(day, 0 ,CONVERT(date,GETDATE()))
+		nsa.DueDateTime >= :start
+		AND nsa.DueDateTime <= :end
+		--nsa.DueDateTime >= DATEADD(day, 0 ,CONVERT(date,GETDATE()))
+		--nsa.DueDateTime <= DATEADD(day, +6 ,CONVERT(date,GETDATE()))
 
-		AND nsa.NonScheduledActivityCode LIKE '%Open%'
+		AND nsa.NonScheduledActivityCode LIKE :status
 		--AND nsa.NonScheduledActivityCode LIKE '%Completed%'
 		AND ac.ActivityCode LIKE '%PMR%'
+		AND nsa.ObjectStatus NOT LIKE '%Deleted%'
 		AND pd.PrimaryFlag = '1'
 		AND pd.OncologistFlag = '1'
 		AND diag.Description NOT LIKE '%ERROR%' 
@@ -64,6 +69,9 @@ class Patient
 		
 		try {
 			$sth = $this->ariadb->prepare($sql);
+			$sth->bindParam(":start", date("Y-m-d H:i:s",strtotime($request['startDate'])), PDO::PARAM_STR);
+			$sth->bindParam(":end", date("Y-m-d H:i:s",strtotime($request['endDate'])), PDO::PARAM_STR);
+			$sth->bindParam(":status", $request['status'], PDO::PARAM_STR);
 			$sth->execute();
 		} catch (PDOException $e) {
 			echo "Error! Could not query: " . $e->getMessage();

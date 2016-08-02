@@ -9,17 +9,16 @@
   <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body ng-app="myApp" >
-  <div class="se-pre-con">
-    <h2 id="middle">Grabbing Patient Data!</h2>
-  </div>
-  <pagecontroller></pagecontroller>
+  <!-- Add Landing page with date selector -->
+  <div ui-view></div>
+  
+  <!-- <pagecontroller></pagecontroller> -->
   <!-- <div ng-view></div> -->
 </body>
   
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="bower_components/angular/angular.min.js"></script>
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script> -->
+  
   <script src="bower_components/highcharts/highcharts.js"></script>
   <script src="bower_components/highcharts/highcharts-more.js"></script>
   <script src="bower_components/highcharts/modules/drilldown.js"></script>
@@ -27,12 +26,18 @@
   <script src="bower_components/highcharts/modules/exporting.js"></script>
   <script src="bower_components/pdfobject/pdfobject.min.js"></script>
 
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/ui-bootstrap-tpls-2.0.0.min.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
   <script src="js/base.app.js"></script>
-  <!-- <script src="js/unused/app.config.js"></script> -->
   <script src="js/main/chart.service.js"></script>
   <script src="js/main/patientTreatmentInfo.service.js"></script>
   <script src="js/main/init.service.js"></script>
   <script src="js/main/update.service.js"></script>
-  <script src="js/main/mainpage.component.js"></script>
+  <script src="js/unused/app.config.js"></script>
+  <script src="js/main/form.controller.js"></script>
+  <script src="js/main/mainpage.controller.js"></script>
+  
+  
 </html>
   

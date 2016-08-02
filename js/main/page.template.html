@@ -1,3 +1,6 @@
+<div class="se-pre-con">
+  <h2 id="middle">Grabbing Patient Data!</h2>
+</div>
 <nav id="nav" class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -6,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="">Patient Management</a>
+      <a class="navbar-brand" ui-sref="landing">Patient Management</a>
     </div>
     <div>
       <div class="collapse navbar-collapse" id="myNavbar">
@@ -24,15 +27,15 @@
             </ul>
           </li>
 
-          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            Patient
+          <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="">
+            Patients({{numPatients}})
             <span class="caret"></span></a> 
             <ul class="dropdown-menu scrollable-menu">
               <li class="dropdown-header" ng-repeat-start="x in dataList | filter:{lastName:doctorLast, firstName:doctorFirst}">
                 Dr. {{x.firstName + " " + x.lastName}}
               </li>
               <li ng-repeat-end ="x in dataList" ng-repeat="n in x.patients | filter:patient">
-                <a href="" ng-click="updateActivePatient(n.ID); grabPatientInfo()">
+                <a href="" ng-click="updateActivePatient(n.ID); grabPatientInfo()" >
                   {{n.lastName + ", " + n.firstName + " (" + n.ID +") "}}
                   <!-- ***{{n.ID}} -->
                 </a>
@@ -41,11 +44,11 @@
           </li>
         </ul>
         <ul id="name" class="nav navbar-nav">
-        <li><a style="font-size: 175%"><span>
-          {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
-          {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
-          ({{patientID}})</a></span>
-        </li>
+          <li><a style="font-size: 175%"><span>
+            {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
+            {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
+            ({{patientID}})</a></span>
+          </li>
         </ul>
         <!-- <form class="navbar-form navbar-left" role="search">
           <div class="form-group">
@@ -150,107 +153,98 @@
 
         <div id="Documents" >
           <div class="row content">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#overview" id="overview-tab" data-toggle="tab" aria-expanded="true">
-                Overview</a>
-              </li>
-              <li class=""><a href="#docpane" id="doc-tab" data-toggle="tab" aria-expanded="false">
-                Documents</a>
-              </li>
-            </ul> <br>
 
-            <div id="myTabContent" class="tab-content">
-              <div class="tab-pane active fade in" id="overview">
-                <div class="col-sm-3">
-                  <div class="panel-group">
-                    <div class="panel panel-default">
-                      <div class="panel-heading"><strong>General</strong></div>
-                      <ul class="list-group">
-                        <li class="list-group-item"><strong>Basic Info</strong>: <strong class="text-primary">{{getAge()}}</strong> year old <strong class="text-primary">{{dataList[activeDoctorIndex].patients[activePatientIndex].Sex}}</strong>
-                        </li>
-                        <li ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS.DueDate ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>New Start</strong>: {{NewStart.toDateString()}}
-                        </li>
-                        <li ng-class="(NewStart > SGAS.DueDate ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>{{SGAS.Priority + " Due"}}</strong>: {{SGAS.DueDate.toDateString()}}
-                        </li>
-                        <li class="list-group-item"><strong>Physician</strong>: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="panel panel-default">
-                    <!-- <div class="panel-heading"><strong>Required Documents</strong></div> -->
-                    <table id="ReqDoctable" class="table table-hover">
-                      <thead style="background-color:#f5f5f5; font-size:115%"><tr><th>Document</th><th>Pres</th><th>Appr</th></tr></thead>
-                      <tbody>
-                      <tr ng-repeat="x in requiredDocuments">
-                        <td>{{x.fileType}}</td>
-                        <td >
-                          <img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable">
-                          <img src="img/check.png" height="20px" width="20px" ng-if="x.isAvailable">
-                        </td>
-                        <td>
-                          <img src="img/x.png" height="20px" width="20px" ng-if="!(x.Approval === 'Approved' || x.Signed === 'Signed')">
-                          <img src="img/check.png" height="20px" width="20px" ng-if="(x.Approval === 'Approved' || x.Signed === 'Signed')">
-                        </td>
-                      </tr>
-                    </table>
-                    </tbody>
-                    <!-- <ul class="list-group">
-                      <li ng-repeat="x in requiredDocuments" ng-class="(x.isAvailable ? 'list-group-item list-group-item-default' : 'list-group-item list-group-item-danger')"><div style="display:inline;">{{x.fileType}}</div>
-                        <div style="display:inline; float:right"><img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable"></div>
-                        <div style="display:inline; float:right"><img src="img/check.jpg" height="20px" width="20px" ng-if="x.isAvailable"></div>
-                      </li>
-                    </ul> -->
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="panel-group">
-                    <div class="panel panel-default">
-                      <div class="panel-heading"><strong>Diagnosis</strong></div>
-                      <ul class="list-group" style="max-height: 300px;overflow-x: hidden; margin : auto;height: auto;">
-                        <li class="list-group-item" ng-repeat="x in patientDiagnosis" >
-                          <span class="text-primary">
-                            [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
-                          </span>
-                          <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
-                          <p style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></p>
-                        </li>
-                      </ul>
-                    </div>
-                    <br>
-                    <div class="panel-group" >
-                      <div class="panel panel-default">
-                        <div class="panel-heading"><strong>Planning</strong></div>
-                        <ul class="list-group"style="max-height: 350px;overflow-x: hidden; margin : auto;height: auto;">
-                          <li class="list-group-item"><strong>Intent: </strong>{{dataList[activeDoctorIndex].patients[activePatientIndex].PMR}}</li>
-                          <li class="list-group-item" ng-repeat="x in TreatmentInfo">
-                            <strong>{{x.Plan}}:</strong> <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong><br>
-                            <small><strong>Plan Approval: </strong>{{x.PlanDate}}</small>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="panel-group">
-                    <div ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS.DueDate ? 'panel panel-danger' : 'panel panel-default')">
-                      <div class="panel-heading" style="text-align:center"><strong>Patient Planning Times</strong></div>
-                      <div id="progress"></div>
-                    </div>
-                  </div>
+            <uib-tabset active='activeTab'>
+            <uib-tab index="0" heading="Overview">
+
+            <div class="col-sm-3">
+              <div class="panel-group">
+                <div class="panel panel-default">
+                  <div class="panel-heading"><strong>General</strong></div>
+                  <ul class="list-group">
+                    <li class="list-group-item"><strong>Basic Info</strong>: <strong class="text-primary">{{getAge()}}</strong> year old <strong class="text-primary">{{dataList[activeDoctorIndex].patients[activePatientIndex].Sex}}</strong>
+                    </li>
+                    <li ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS.DueDate ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>New Start</strong>: {{NewStart.toDateString()}}
+                    </li>
+                    <li ng-class="(NewStart > SGAS.DueDate ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>{{SGAS.Priority + " Due"}}</strong>: {{SGAS.DueDate.toDateString()}}
+                    </li>
+                    <li class="list-group-item"><strong>Physician</strong>: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}
+                    </li>
+                  </ul>
                 </div>
               </div>
+              <div class="panel panel-default">
+                <!-- <div class="panel-heading"><strong>Required Documents</strong></div> -->
+                <table id="ReqDoctable" class="table table-hover">
+                  <thead style="background-color:#f5f5f5; font-size:115%"><tr><th>Document</th><th>Pres</th><th>Appr</th></tr></thead>
+                  <tbody>
+                    <tr ng-repeat="x in requiredDocuments">
+                      <td>{{x.fileType}}</td>
+                      <td >
+                        <img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable">
+                        <img src="img/check.png" height="20px" width="20px" ng-if="x.isAvailable">
+                      </td>
+                      <td>
+                        <img src="img/x.png" height="20px" width="20px" ng-if="!(x.Approval === 'Approved' || x.Signed === 'Signed')">
+                        <img src="img/check.png" height="20px" width="20px" ng-if="(x.Approval === 'Approved' || x.Signed === 'Signed')">
+                      </td>
+                    </tr>
+                  </table>
+                </tbody>
 
-              <div class="tab-pane fade" id="docpane">
-                <div id="Doc">
-                  <h2>Please select a document from the list on the left.</h2>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="panel-group">
+                <div class="panel panel-default">
+                  <div class="panel-heading"><strong>Diagnosis</strong></div>
+                  <ul class="list-group" style="max-height: 300px;overflow-x: hidden; margin : auto;height: auto;">
+                    <li class="list-group-item" ng-repeat="x in patientDiagnosis" >
+                      <span class="text-primary">
+                        [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
+                      </span>
+                      <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
+                      <p style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></p>
+                    </li>
+                  </ul>
+                </div>
+                <br>
+                <div class="panel-group" >
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Planning</strong></div>
+                    <ul class="list-group"style="max-height: 350px;overflow-x: hidden; margin : auto;height: auto;">
+                      <li class="list-group-item"><strong>Intent: </strong>{{dataList[activeDoctorIndex].patients[activePatientIndex].PMR}}</li>
+                      <li class="list-group-item" ng-repeat="x in TreatmentInfo">
+                        <strong>{{x.Plan}}:</strong> <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong><br>
+                        <small><strong>Plan Approval: </strong>{{x.PlanDate}}</small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="panel-group">
+                <div ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS.DueDate ? 'panel panel-danger' : 'panel panel-default')">
+                  <div class="panel-heading" style="text-align:center"><strong>Patient Planning Times</strong></div>
+                  <div id="progress"></div>
                 </div>
               </div>
             </div>
+          </uib-tab>
+
+          <uib-tab index="1" heading="Document">
+          <div id="docpane">
+            <div id="Doc">
+              <h2>Please select a document from the list on the left.</h2>
+            </div>
           </div>
-        </div>
-      </div>
+        </uib-tab>
+      </uib-tabset>
+
     </div>
   </div>
+</div>
+</div>
+</div>

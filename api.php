@@ -5,9 +5,9 @@ $method = $_SERVER;
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
-/*echo print_r($method) . '<br>';
-echo print_r($request). '<br>';
-echo print_r($input). '<br>';*/
+//echo print_r($method) . '<br>';
+//echo print_r($request). '<br>';
+//echo print_r($input). '<br>';
 
 include('/usr/lib/cgi-bin/dev/robert/includes/config_PDO.php');
 
@@ -24,10 +24,12 @@ include 'php/patientModel.php';
 $pID = $request[1];
 $patient = new Patient($dbh,$pID);
 
+//echo $input['startDate'];
+
 //check which function is required switch/case?
 switch ($request[0]) {
 	case 'getAllPatients':
-		echo json_encode($patient->getAllPatients());
+		echo json_encode($patient->getAllPatients($input));
 		break;
 	case 'getPatientPhoto':
 		echo $patient->getPatientPhoto();

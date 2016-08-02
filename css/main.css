@@ -9,6 +9,9 @@
   p{
     margin: 0;
   }
+  /*a{
+    cursor: pointer;
+  }*/
   
   .no-js #loader { display: none;  }
   .js #loader { display: block; position: absolute; left: 100px; top: 0; }
@@ -142,19 +145,6 @@
 /*  .tab-content .tab-pane {    
     position: relative;
 }*/
-  
-  .form-control{
-    color: white;
-  }
-  option {
-    padding: 40px;
-    font-size: 125%;
-    color: #666666;
-  }
-  select{
-    padding: 40px;
-    border: 10px;
-  }
 
 
   /*=======================================

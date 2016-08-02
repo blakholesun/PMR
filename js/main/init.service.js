@@ -1,4 +1,4 @@
-angular.module('myApp').factory('initPage', ['$http','$q', function ($http,$q) {
+angular.module('myApp').factory('initPage', ['$http','$q','$rootScope', function ($http,$q, $rootScope) {
 
 	return {
 
@@ -6,7 +6,13 @@ angular.module('myApp').factory('initPage', ['$http','$q', function ($http,$q) {
 
 			var defer = $q.defer();
 
-			$http.post("api/getAllPatients/").then(function (response) {
+			var searchOptions = {
+				startDate: $rootScope.dates.startDate.toDateString(), 
+				endDate: $rootScope.dates.endDate.toDateString(),
+				status: $rootScope.dates.patientStatus
+			}
+			console.log(searchOptions);
+			$http.post("api/getAllPatients/", searchOptions).then(function (response) {
     			
     			var allPatientData = {};
 
