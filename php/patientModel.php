@@ -52,10 +52,12 @@ class Patient
 		WHERE
 		--DATENAME(weekday, nsa.DueDateTime) = 'Tuesday'
 		nsa.DueDateTime >= DATEADD(day, 0 ,CONVERT(date,GETDATE()))
+		AND nsa.DueDateTime <= DATEADD(day, +6 ,CONVERT(date,GETDATE()))
 
 		AND nsa.NonScheduledActivityCode LIKE '%Open%'
 		--AND nsa.NonScheduledActivityCode LIKE '%Completed%'
 		AND ac.ActivityCode LIKE '%PMR%'
+		AND nsa.ObjectStatus NOT LIKE '%Deleted%'
 		AND pd.PrimaryFlag = '1'
 		AND pd.OncologistFlag = '1'
 		AND diag.Description NOT LIKE '%ERROR%' 
