@@ -33,22 +33,23 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 		    	new SearchName("planning sheet;fast-track"),
 		    	new SearchName("prescription")
 		    ];
-
+		    // documents are sorted in order of date desc
 		    for (var x in documents){        
 		      	var name = documents[x].DocType.toLowerCase();
-		      	var date = new Date(documents[x].ApprovalTime.substring(0,11));
+		      	var creation_date = new Date(documents[x].Date.substring(0,11));
+		      	var apprdate = new Date(documents[x].ApprovalTime.substring(0,11));
 		      	var cutoffDate = new Date();
 		      	// Change this value for cutoff date
 		      	cutoffDate.setDate(cutoffDate.getDate()-360)
 		      	for (var i =0; i<namesearch.length; i++){
-
+		      		//seraching through dual string
 		      		var res = namesearch[i].doc.split(";");
 		      		for (spl in res){
-		      			if(name.indexOf(res[spl]) != -1 && date > cutoffDate && !namesearch[i].found){
+		      			if(name.indexOf(res[spl]) != -1 && creation_date > cutoffDate && !namesearch[i].found){
 			          	requiredDocuments[i].isAvailable = true;
 			          	requiredDocuments[i].Approval = documents[x].ApprovalStatus;
 			          	requiredDocuments[i].Signed = documents[x].Signed;
-			          	requiredDocuments[i].ApprovalDate = date;
+			          	requiredDocuments[i].ApprovalDate = apprdate;
 			          	namesearch[i].found = true;
 		      			}
 		      		}

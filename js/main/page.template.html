@@ -28,7 +28,7 @@
           </li>
 
           <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="">
-            Patients({{numPatients}})
+            Patients({{doctorLast === "" ? numPatients : dataList[activeDoctorIndex].numPatients()}})
             <span class="caret"></span></a> 
             <ul class="dropdown-menu scrollable-menu">
               <li class="dropdown-header" ng-repeat-start="x in dataList | filter:{lastName:doctorLast, firstName:doctorFirst}">
@@ -44,7 +44,7 @@
           </li>
         </ul>
         <ul id="name" class="nav navbar-nav">
-          <li><a style="font-size: 175%"><span>
+          <li><a style="font-size: 175%"><span ng-if="activeDoctorIndex !== -1">
             {{dataList[activeDoctorIndex].patients[activePatientIndex].lastName}}, 
             {{dataList[activeDoctorIndex].patients[activePatientIndex].firstName}}
             ({{patientID}})</a></span>

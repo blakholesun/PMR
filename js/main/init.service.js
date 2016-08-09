@@ -24,6 +24,10 @@ angular.module('myApp').factory('initPage', ['$http','$q','$rootScope', function
 			      this.firstName = firstName;
 			      this.lastName = lastName;
 			      this.patients = [];
+			      this.numPatients = function()
+			      {
+			      	return this.patients.length;
+			      }
 			    }
 
 			    //Create a patient class to store names and id

@@ -1,0 +1,40 @@
+<div class="jumbotron">
+	<h1>Welcome To Patient Management</h1>
+	<h3>Please select a date range for PMR patients</h3>
+</div>
+<br>
+<div class="col-md-6 col-md-offset-3">
+	<form name="myForm" ng-submit="processForm()">
+		<fieldset>
+			<legend>Date Range</legend>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">From</label>
+				<div class="col-sm-9">
+					<div class="input-daterange" id="datepicker">
+						<div class="input-group">
+							<input type="date" name="inputs" ng-model="startDate"
+       						placeholder="yyyy-MM-dd" required />
+							<span class="input-group-addon">to</span>
+							<input type="date" name="inputd" ng-model="endDate"
+       						placeholder="yyyy-MM-dd" required />
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-12">
+					<button type="reset" class="btn btn-default">
+						Clear
+					</button>
+					<button ng-if=" endDate > startDate" type="submit" class="btn btn-primary">
+						Submit
+					</button>
+					<button class="btn btn-primary" ng-click="setToCurrentWeek()" ui-sref="mainpage" >
+						Current Week
+					</button>
+					<br> <br>
+					<span class="help-block">Submit displays completed PMR tasks for the date range. Current week displays open PMR tasks for this weeks PMR</span>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
