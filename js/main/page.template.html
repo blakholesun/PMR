@@ -225,7 +225,8 @@
                           <li class="list-group-item"><strong>Intent: </strong>{{dataList[activeDoctorIndex].patients[activePatientIndex].PMR}}</li>
                           <li class="list-group-item" ng-repeat="x in TreatmentInfo">
                             <strong>{{x.Plan}}:</strong> <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong><br>
-                            <small><strong>Plan Approval: </strong>{{x.PlanDate}}</small>
+                            <small><strong>Plan Approval: </strong>{{x.PlanDate}}</small><br>
+                            <small><strong>Plan Status: </strong>{{x.status}}</small>
                           </li>
                         </ul>
                       </div>

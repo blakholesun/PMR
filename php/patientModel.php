@@ -144,7 +144,7 @@ class Patient
     	$sql = "SELECT DISTINCT 
 		pt.PatientId, 
 		ac.ActivityCode, 
-		nsa.DueDateTime as Date 
+		CONVERT(date,nsa.DueDateTime) as Date 
 
 		FROM 
 		Patient pt, 
@@ -524,7 +524,7 @@ class Patient
 	    --pt.PatientId = :pID
 	    (pt.PatientId = :pID OR pt.PatientId2 = :pID) 
 	    --pt.PatientId = '5213748'
-	    AND ps.Status IN ('TreatApproval', 'PlanApproval', 'Reviewed', 'Completed')
+	    AND ps.Status IN ('TreatApproval', 'PlanApproval', 'Reviewed', 'Completed', 'Retired')
 	    AND pt.PatientSer = co.PatientSer
 	    AND radp.RTPlanSer = rt.RTPlanSer 
 	    AND co.CourseSer = ps.CourseSer
