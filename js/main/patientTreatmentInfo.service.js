@@ -25,7 +25,7 @@ angular.module('myApp').factory('patientTreatInfo', ['$http','$q', function ($ht
 							//&& TreatmentInfo[item1][item].cstatus === 'ACTIVE'
 							//&& planCreationDate > cutoffDate
 							&& TreatmentInfo[item1][item].intent !== 'VERIFICATION'
-							&& TreatmentInfo[item1][item].status === 'TreatApproval'){
+							&& (TreatmentInfo[item1][item].status === 'TreatApproval' || TreatmentInfo[item1][item].status === 'Retired') ){
 
 							patTreatInfo.push(new Object());
 							patTreatInfo[i].Dose =  TreatmentInfo[item1][item].dose;
@@ -33,6 +33,7 @@ angular.module('myApp').factory('patientTreatInfo', ['$http','$q', function ($ht
 							.nofractions;
 							patTreatInfo[i].Plan = TreatmentInfo[item1][item].name;
 							patTreatInfo[i].PlanDate = TreatmentInfo[item1][item].date;
+							patTreatInfo[i].status = TreatmentInfo[item1][item].status;
 							i++;
 						}
 					}
