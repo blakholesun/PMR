@@ -6,8 +6,8 @@ $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
 /*echo print_r($method) . '<br>';
-echo print_r($request). '<br>';
-echo print_r($input). '<br>';
+//echo print_r($request). '<br>';
+//echo print_r($input). '<br>';
 */
 include('/usr/lib/cgi-bin/dev/robert/includes/config_PDO.php');
 
