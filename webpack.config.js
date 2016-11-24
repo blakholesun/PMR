@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         app: './js/base.app.js',
-        vendor: ['angular', 'jquery', 'bootstrap', 'highcharts', 'angular-ui-router', 'pdfobject']
+        vendor: ['jquery', 'angular', 'bootstrap', 'highcharts', 'angular-ui-router', 'pdfobject']
     },
     output: {
         path:'./dist',
@@ -23,6 +23,11 @@ module.exports = {
         inline: true
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
+        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js"),
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery',
+            jquery: 'jquery'
+        })
     ]
 };
