@@ -1,0 +1,77 @@
+<div class="tab-pane active fade in" id="overview">
+  <div class="col-sm-3">
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>General</strong></div>
+        <ul class="list-group">
+          <li class="list-group-item"><strong>Basic Info</strong>: <strong class="text-primary">{{getAge()}}</strong> year old <strong class="text-primary">{{dataList[activeDoctorIndex].patients[activePatientIndex].Sex}}</strong>
+          </li>
+          <li ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS.DueDate ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>New Start</strong>: {{NewStart.toDateString()}}
+          </li>
+          <li ng-class="(NewStart > SGAS.DueDate ? 'list-group-item list-group-item-danger' : 'list-group-item list-group-item-default')"><strong>{{SGAS.Priority + " Due"}}</strong>: {{SGAS.DueDate.toDateString()}}
+          </li>
+          <li class="list-group-item"><strong>Physician</strong>: Dr. {{dataList[activeDoctorIndex].firstName + " " + dataList[activeDoctorIndex].lastName}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <!-- <div class="panel-heading"><strong>Required Documents</strong></div> -->
+      <table id="ReqDoctable" class="table table-hover">
+        <thead style="background-color:#f5f5f5; font-size:115%"><tr><th>Document</th><th>Pres</th><th>Appr</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="x in requiredDocuments">
+            <td>{{x.fileType}}</td>
+            <td >
+              <img src="img/x.png" height="20px" width="20px" ng-if="!x.isAvailable">
+              <img src="img/check.png" height="20px" width="20px" ng-if="x.isAvailable">
+            </td>
+            <td>
+              <img src="img/x.png" height="20px" width="20px" ng-if="!(x.Approval === 'Approved' || x.Signed === 'Signed')">
+              <img src="img/check.png" height="20px" width="20px" ng-if="(x.Approval === 'Approved' || x.Signed === 'Signed')">
+            </td>
+          </tr>
+        </table>
+      </tbody>
+
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>Diagnosis</strong></div>
+        <ul class="list-group" style="max-height: 300px;overflow-x: hidden; margin : auto;height: auto;">
+          <li class="list-group-item" ng-repeat="x in patientDiagnosis" >
+            <span class="text-primary">
+              [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
+            </span>
+            <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
+            <p style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></p>
+          </li>
+        </ul>
+      </div>
+      <br>
+      <div class="panel-group" >
+        <div class="panel panel-default">
+          <div class="panel-heading"><strong>Planning</strong></div>
+          <ul class="list-group"style="max-height: 350px;overflow-x: hidden; margin : auto;height: auto;">
+            <li class="list-group-item"><strong>Intent: </strong>{{dataList[activeDoctorIndex].patients[activePatientIndex].PMR}}</li>
+            <li class="list-group-item" ng-repeat="x in TreatmentInfo">
+              <strong>{{x.Plan}}:</strong> <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong><br>
+              <small><strong>Plan Approval: </strong>{{x.PlanDate}}</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="panel-group">
+      <div ng-class="(NewStart == 'Invalid Date' || NewStart > SGAS.DueDate ? 'panel panel-danger' : 'panel panel-default')">
+        <div class="panel-heading" style="text-align:center"><strong>Patient Planning Times</strong></div>
+        <div id="progress"></div>
+      </div>
+    </div>
+  </div>
+</div>
