@@ -2,7 +2,7 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        app: './app/app.js',
+        app: './js/base.app.js',
         vendor: ['angular', 'jquery', 'bootstrap', 'highcharts', 'angular-ui-router', 'pdfobject']
     },
     output: {
