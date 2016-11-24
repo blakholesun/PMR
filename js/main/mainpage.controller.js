@@ -34,8 +34,14 @@ function ($http,$scope,$timeout,$filter,initPage,updateService){
       $scope.TreatmentInfo = data;
     });
 
-    //Get new start and SGAS dates
+    //Get Histology info
+    updateService.getHistologyInfo($scope.patientID).then(function(data){
+      $scope.HistologyInfo = data;
+      $scope.HistologyInfo.trans_log_mtstamp = new Date($scope.HistologyInfo.trans_log_mtstamp);
+      console.log(data);
+    })
 
+    //Get new start and SGAS dates
     updateService.getNewStart($scope.patientID).then(function(data){
       $scope.NewStart = data[0];
       $scope.SGAS = data[1];
@@ -109,6 +115,12 @@ function ($http,$scope,$timeout,$filter,initPage,updateService){
     updateService.getTreatInfo($scope.patientID).then(function(data){
       $scope.TreatmentInfo = data;
     });
+
+    updateService.getHistologyInfo($scope.patientID).then(function(data){
+      $scope.HistologyInfo = data;
+      $scope.HistologyInfo.trans_log_mtstamp = new Date($scope.HistologyInfo.trans_log_mtstamp);
+      console.log($scope.HistologyInfo);
+    })
     //console.log(patientTreatInfo);
     updateService.getNewStart($scope.patientID).then(function(data){
       $scope.NewStart = data[0];
@@ -201,6 +213,11 @@ function ($http,$scope,$timeout,$filter,initPage,updateService){
     }else {
       return 1;
     }
+  }
+
+  $scope.isBreast = function(){
+    console.log($scope.patientDiagnosis[0].desc);
+    return $scope.patientDiagnosis[0].desc.toLowerCase().indexOf('breast') !== -1;
   }
 
 }]);

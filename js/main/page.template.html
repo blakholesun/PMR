@@ -198,13 +198,21 @@
               <div class="panel-group">
                 <div class="panel panel-default">
                   <div class="panel-heading"><strong>Diagnosis</strong></div>
-                  <ul class="list-group" style="max-height: 300px;overflow-x: hidden; margin : auto;height: auto;">
+                  <ul class="list-group" style="max-height: 400px;overflow-x: hidden; margin : auto;height: auto;">
                     <li class="list-group-item" ng-repeat="x in patientDiagnosis" >
                       <span class="text-primary">
                         [{{$index+1}}] <strong>{{x.desc}}</strong> <br>
                       </span>
                       <p ng-class="x.stageCriteria == 'Stage Not Available' ? 'text-danger' : 'text-default'" style="margin-left: 25px"><strong>Staging</strong>: {{x.stageCriteria}}</p>
                       <p style="margin-left: 25px"><small><strong>Diagnosis Date</strong>: {{x.dateStamp}}</small><br></p>
+                      <p style="margin-left: 25px"><small><strong>Histology</strong>: {{HistologyInfo.morph_desc || HistologyInfo}}</small><br></p>
+                      <div ng-if="isBreast()">
+                        <p style="margin-left: 25px"><small><strong>Nodes</strong>: {{HistologyInfo.nodes_pos}} / {{HistologyInfo.nodes_examined}}</small><br></p>
+                        <p style="margin-left: 25px"><small><strong>ER/PR</strong>: {{HistologyInfo.er_status}} / {{HistologyInfo.pr_status}}</small><br></p>
+                        <p style="margin-left: 25px"><small><strong>HER2NEU</strong>: {{HistologyInfo.her_desc}}</small><br></p>
+                        <p style="margin-left: 25px"><small><strong>DCIS</strong>: {{HistologyInfo.dcis_desc}}</small><br></p>
+                        <p style="margin-left: 25px"><small><strong>Tumor Size</strong>: {{HistologyInfo.tumor_size}} cm</small><br></p>
+                      </div>
                     </li>
                   </ul>
                 </div>
@@ -212,7 +220,7 @@
                 <div class="panel-group" >
                   <div class="panel panel-default">
                     <div class="panel-heading"><strong>Planning</strong></div>
-                    <ul class="list-group"style="max-height: 350px;overflow-x: hidden; margin : auto;height: auto;">
+                    <ul class="list-group"style="max-height: 250px;overflow-x: hidden; margin : auto;height: auto;">
                       <li class="list-group-item"><strong>Intent: </strong>{{dataList[activeDoctorIndex].patients[activePatientIndex].PMR}}</li>
                       <li class="list-group-item" ng-repeat="x in TreatmentInfo">
                         <strong>{{x.Plan}}:</strong> <strong class="text-primary">{{x.Dose*x.noFractions}} Gy / {{x.noFractions}} fx</strong><br>

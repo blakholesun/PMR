@@ -130,6 +130,18 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
       			defer2.resolve(SGAS);
     		});
 			return $q.all([defer1.promise,defer2.promise]);
+		},
+
+		getHistologyInfo: function(patientId){
+			var defer = $q.defer();
+			$http.post( "api/getHistologyInfo/" + patientId)
+    		.then( function (response) {
+    			var histologyInfo = {};
+      			histologyInfo = response.data;
+      			defer.resolve(histologyInfo);
+    		});
+
+    		return defer.promise;
 		}
 
 	}

@@ -5,10 +5,10 @@ $method = $_SERVER;
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
-//echo print_r($method) . '<br>';
-//echo print_r($request). '<br>';
-//echo print_r($input). '<br>';
-
+/*echo print_r($method) . '<br>';
+echo print_r($request). '<br>';
+echo print_r($input). '<br>';
+*/
 include('/usr/lib/cgi-bin/dev/robert/includes/config_PDO.php');
 
 try {
@@ -21,12 +21,14 @@ try {
 //echo "DB connected!";
 
 include 'php/patientModel.php';
+
+//echo "After include";
 $pID = $request[1];
 $patient = new Patient($dbh,$pID);
 
 //echo $input['startDate'];
 
-//check which function is required switch/case?
+//check which function is required by http
 switch ($request[0]) {
 	case 'getAllPatients':
 		echo json_encode($patient->getAllPatients($input));
@@ -51,6 +53,9 @@ switch ($request[0]) {
 		break;
 	case 'getTreatmentInfo':
 		echo json_encode($patient->getTreatmentInfo());
+		break;
+	case 'getHistologyInfo':
+		echo json_encode($patient->getHistologyInfo());
 		break;
 	default:
 		# code...

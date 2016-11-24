@@ -37,6 +37,12 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
       $scope.TreatmentInfo = data;
     });
 
+    //Get patient Histology Info
+    updateService.getHistologyInfo($scope.patientID).then(function(data){
+      $scope.HistologyInfo = data;
+      console.log(data);
+    })
+
     //Get new start and SGAS dates
 
     updateService.getNewStart($scope.patientID).then(function(data){
