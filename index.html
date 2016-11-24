@@ -1,33 +1,35 @@
 <!DOCTYPE html>
-<html >
+<html ng-app="myApp" >
 <head>
-  <title>Patient Management</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap2.min.css">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+    <title>Patient Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap2.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
-<body ng-app="myApp" >
-  <!-- Add Landing page with date selector -->
-  <div ui-view></div>
-  
-  <!-- <pagecontroller></pagecontroller> -->
-  <!-- <div ng-view></div> -->
+<body>
+
+<!-- Add Landing page with date selector -->
+<div ui-view></div>
+
+<!-- <pagecontroller></pagecontroller> -->
+<!-- <div ng-view></div> -->
 </body>
 
-  <script src="dist/vendor.bundle.js"></script>
-  <script src="dist/app.bundle.js"></script>
+<script src="dist/vendor.bundle.js"></script>
+<script src="dist/app.bundle.js"></script>
 
-  <!--<script src="js/base.app.js"></script>-->
-  <script src="js/main/chart.service.js"></script>
-  <script src="js/main/patientTreatmentInfo.service.js"></script>
-  <script src="js/main/init.service.js"></script>
-  <script src="js/main/update.service.js"></script>
-  <script src="js/unused/app.config.js"></script>
-  <script src="js/main/form.controller.js"></script>
-  <script src="js/main/mainpage.controller.js"></script>
-  
-  
+<!--<script src="js/base.app.js"></script>-->
+<script src="js/main/global/chart.service.js"></script>
+<script src="js/main/global/patientTreatmentInfo.service.js"></script>
+<script src="js/main/global/init.service.js"></script>
+<script src="js/main/global/update.service.js"></script>
+<script src="js/unused/app.config.js"></script>
+<script src="js/main/search/form.controller.js"></script>
+<script src="js/main/global/nav.controller.js"></script>
+<script src="js/main/mainpage/mainpage.controller.js"></script>
+
+
 </html>
   
