@@ -1,0 +1,30 @@
+{
+  "name": "pmr",
+  "version": "2.0.0",
+  "description": "Single patient search with PMR view",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blakholesun/PMR.git"
+  },
+  "author": "Robert Maglieri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blakholesun/PMR/issues"
+  },
+  "homepage": "https://github.com/blakholesun/PMR#readme",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-ui-router": "^0.3.2",
+    "bootstrap": "^3.3.7",
+    "highcharts": "^5.0.4",
+    "jquery": "^3.1.1",
+    "pdfobject": "^2.0.201604172"
+  },
+  "devDependencies": {
+    "webpack": "^1.13.3"
+  }
+}
