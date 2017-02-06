@@ -5,13 +5,13 @@
         .module('myApp')
         .controller('navController', navController);
 
-    navController.$inject = ['patientTreatInfo', 'initPage'];
+    navController.$inject = ['initPage'];
 
     /* @ngInject */
-    function navController(patientTreatInfo, initPage) {
+    function navController(initPage) {
         var vm = this;
         vm.title = 'navController';
-        //vm.patientData = [];
+        vm.patientData = [];
 
         activate();
 
