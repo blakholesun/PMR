@@ -17,7 +17,8 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 			    new Document("Pathology"),
 			    new Document("Rad Onc Requisition"), 
 			    new Document("RO-CT Planning Sheet / Fast-Track"),
-			    new Document("Radiotherapy Prescription")
+			    new Document("Radiotherapy Prescription"),
+			    new Document("RO-Peer Review Note")
 		    ];
 		    
 		    function SearchName(doc){
@@ -31,7 +32,8 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
 		    	new SearchName("pathology"),
 		    	new SearchName("requisition"),
 		    	new SearchName("planning sheet;fast-track"),
-		    	new SearchName("prescription")
+		    	new SearchName("prescription"),
+		    	new SearchName("peer review note")
 		    ];
 			// documents are sorted in order of date desc
 		    for (var x in documents){        
@@ -130,6 +132,18 @@ angular.module('myApp').factory('updateService', ['$http','$q','chartService', '
       			defer2.resolve(SGAS);
     		});
 			return $q.all([defer1.promise,defer2.promise]);
+		},
+
+		getHistologyInfo: function(patientId){
+			var defer = $q.defer();
+			$http.post( "api/getHistologyInfo/" + patientId)
+    		.then( function (response) {
+    			var histologyInfo = {};
+      			histologyInfo = response.data;
+      			defer.resolve(histologyInfo);
+    		});
+
+    		return defer.promise;
 		}
 
 	}

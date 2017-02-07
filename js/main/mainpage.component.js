@@ -6,8 +6,21 @@ angular.module('myApp')
 });
 
 function pageController($http,$scope,$timeout,$filter,initPage,updateService){
-
+  function hideDivs() {
+    $scope.docLoad = true;
+    $scope.genLoad = true;
+    $scope.diagLoad = true;
+    $scope.planLoad = true;
+    $scope.picLoad = true;
+    $scope.chartLoad = true;
+    console.log('hidingdivs');
+  }
   //Initialize the data in the page. Data List is the list of patients classified by doc
+  
+
+  hideDivs();
+
+
   initPage.init().then(function(initData){
 
     $scope.dataList = initData.dataList;
@@ -24,26 +37,39 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     // First patient info
     updateService.getPhoto($scope.patientID).then(function(data){
       $scope.patientPhoto = data;
+      $scope.picLoad = false;
     });
 
     // First Patient documenst
     updateService.getDocs($scope.patientID).then(function(data){
       $scope.documents = data.documents;
       $scope.requiredDocuments = data.requiredDocs;
+      $scope.docLoad = false;
     });
 
     //Get patient treatment info
     updateService.getTreatInfo($scope.patientID).then(function(data){
       $scope.TreatmentInfo = data;
+      $scope.planLoad = false;
     });
+
+    //Get Histology info
+    updateService.getHistologyInfo($scope.patientID).then(function(data){
+      $scope.HistologyInfo = data;
+      $scope.HistologyInfo.trans_log_mtstamp = new Date($scope.HistologyInfo.trans_log_mtstamp);
+      $scope.diagLoad = false;
+      console.log(data);
+    })
 
     //Get new start and SGAS dates
 
     updateService.getNewStart($scope.patientID).then(function(data){
       $scope.NewStart = data[0];
       $scope.SGAS = data[1];
+      $scope.genLoad = false;
       $timeout(function() {
           updateService.makeChart('#progress', $scope.patientID, $scope.SGAS, $scope.requiredDocuments[2].ApprovalDate);
+          $scope.chartLoad = false;
       }, 200);
     });
     
@@ -100,24 +126,47 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
 
     updateService.getPhoto($scope.patientID).then(function(data){
       $scope.patientPhoto = data;
+      $timeout(function() {
+        $scope.picLoad = false;
+      },200)
     });
 
     updateService.getDocs($scope.patientID).then(function(data){
+      $timeout(function() {
+        $scope.docLoad = false;
+      },200)
       $scope.documents = data.documents;
       $scope.requiredDocuments = data.requiredDocs;
     });
     //console.log($scope.dataList);
     updateService.getTreatInfo($scope.patientID).then(function(data){
+      $timeout(function() {
+        $scope.planLoad = false;
+      },400)
       $scope.TreatmentInfo = data;
     });
+
+    updateService.getHistologyInfo($scope.patientID).then(function(data){
+      $timeout(function() {
+        $scope.diagLoad = false;
+      },400)
+      $scope.HistologyInfo = data;
+      $scope.HistologyInfo.trans_log_mtstamp = new Date($scope.HistologyInfo.trans_log_mtstamp);
+      console.log($scope.HistologyInfo);
+    });
+
     //console.log(patientTreatInfo);
     updateService.getNewStart($scope.patientID).then(function(data){
+      $timeout(function() {
+        $scope.genLoad = false;
+      },200)
       $scope.NewStart = data[0];
       $scope.SGAS = data[1];
       $("#overview-tab").click();
         $timeout(function() {
           updateService.makeChart('#progress', $scope.patientID, $scope.SGAS, $scope.requiredDocuments[2].ApprovalDate);
-        }, 200);
+          $scope.chartLoad = false;
+        }, 500);
     });
 
     
@@ -131,6 +180,8 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
 
   // Moves to next patient and updates fields
   $scope.nextPatient = function(){
+    hideDivs();
+
     var isLastDoctorPatient = $scope.dataList[$scope.activeDoctorIndex].patients.length-1 === 
     $scope.activePatientIndex;
     var isLastDoctor = $scope.dataList.length-1 === $scope.activeDoctorIndex;
@@ -151,6 +202,8 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
 
   // Moves to next patient and updates fields for current patient
   $scope.previousPatient = function(){
+    hideDivs();
+
     var isFirstDoctorPatient = $scope.activePatientIndex === 0;
     var isFirstDoctor = $scope.activeDoctorIndex === 0;
 
@@ -200,6 +253,11 @@ function pageController($http,$scope,$timeout,$filter,initPage,updateService){
     }else {
       return 1;
     }
+  }
+
+  $scope.isBreast = function(){
+    console.log($scope.patientDiagnosis[0].desc);
+    return $scope.patientDiagnosis[0].desc.toLowerCase().indexOf('breast') !== -1;
   }
 
 }

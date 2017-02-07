@@ -121,6 +121,7 @@ class Patient
 
 		WHERE
 		pt.PatientId = :pID
+		AND ph.Thumbnail IS NOT NULL
 		--pt.PatientId = 'AAAA1'
 		";
 		try {
@@ -617,5 +618,64 @@ class Patient
 	        $index += 1;
 	    }
 		return $coursedict;
+    }
+
+    public function getHistologyInfo()
+    {
+    	$sql = " SELECT DISTINCT
+			ptcr.tumor_size,
+			ptcr.nodes_assessed_ind,
+			ptcr.nodes_examined,
+			ptcr.nodes_pos,
+			ptcr.er_status,
+			ptcr.pr_status,
+			ptcr.her2neu_status_typ,
+			ltc_her.lookup_desc as her_desc,
+			ptcr.dcis_status_typ,
+			ltc_dcis.lookup_desc as dcis_desc,
+			morph.morph_desc,
+			ptcr.trans_log_mtstamp
+
+			FROM
+			Patient
+
+			INNER JOIN varianenm.dbo.pt pt ON Patient.PatientSer = pt.patient_ser
+			INNER JOIN varianenm.dbo.pt_dx_cncr ptcr ON pt.pt_id = ptcr.pt_id
+			INNER JOIN varianenm.dbo.icdo_morph_cd morph 
+			ON ptcr.morph_cd = morph.morph_cd
+			AND ptcr.morph_cd_seq = morph.morph_cd_seq
+			AND ptcr.behavior_cd = morph.behavior_cd
+
+			LEFT JOIN varianenm.dbo.lookup_typ_culture ltc_her ON
+			ltc_her.lookup_typ = ptcr.her2neu_status_typ
+			AND ltc_her.table_name ='her2neu_status_typ'
+
+			LEFT JOIN varianenm.dbo.lookup_typ_culture ltc_dcis ON
+			ptcr.dcis_status_typ = ltc_dcis.lookup_typ
+			AND ltc_dcis.table_name ='dcis_status_typ'
+
+			WHERE
+			Patient.PatientId = :pID
+    	";
+
+
+    	try {
+			$sth = $this->ariadb->prepare($sql);
+			$sth->execute(array(':pID' => $this->PatientID));
+		} catch (PDOException $e) {
+			echo "Error! Could not query: " . $e->getMessage();
+		}
+
+		if(!$row = $sth->fetch(PDO::FETCH_ASSOC)) {
+  			$json = 'Unavailable';
+		}else{
+			$json = $row;
+		}
+
+		// Trim text
+
+		$json["morph_desc"] = trim($json["morph_desc"]);
+
+		return $json;
     }
 }

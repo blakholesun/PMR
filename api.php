@@ -50,6 +50,9 @@ switch ($request[0]) {
 	case 'getTreatmentInfo':
 		echo json_encode($patient->getTreatmentInfo());
 		break;
+	case 'getHistologyInfo':
+		echo json_encode($patient->getHistologyInfo());
+		break;
 	default:
 		# code...
 		break;
